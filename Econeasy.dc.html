@@ -29,8 +29,6 @@
     header{padding:10px 14px !important;}
     #ee-title{font-size:26px !important;}
     #ee-btn-name{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    #ee-chipA,#ee-chipB{position:static !important;display:inline-block !important;margin:0 8px 8px 0 !important;}
-    #ee-chip-wrap{margin-top:8px;}
   }
 </style>
 </helmet>
@@ -821,6 +819,28 @@ class Component extends DCLogic {
     return `${cause ? `<b style="color:#2B2622">${cause}</b><br>` : ''}${seg(L[0], oldM[0], newM[0])} &nbsp;·&nbsp; ${seg(L[1], oldM[1], newM[1])}`;
   }
 
+  /* Record the cause + which way each headline metric moved. The bubble then
+     shows the live values (read from the chart's value spans) with arrows. */
+  dir(d) { return Math.abs(d) < 0.4 ? 'flat' : (d > 0 ? 'up' : 'down'); }
+  setReason(oldM, newM, cause) {
+    this._cause = cause || '';
+    this._dirs = (this.ch.metricLabels && oldM && newM) ? [this.dir(newM[0] - oldM[0]), this.dir(newM[1] - oldM[1])] : ['flat', 'flat'];
+    this.reason = cause ? `<b style="color:#2B2622">${cause}</b>` : '';
+  }
+  bubbleHtml() {
+    const spec = this.ch;
+    if (!spec.metricLabels) return this.reason || spec.sbTitle || '';
+    const v1 = (document.getElementById(spec.chipA.id) || {}).textContent || '';
+    const v2 = (document.getElementById(spec.chipB.id) || {}).textContent || '';
+    const dirs = this._dirs || ['flat', 'flat'];
+    const seg = (label, d, val) => {
+      const arr = d === 'up' ? ' ↑' : d === 'down' ? ' ↓' : '';
+      const col = d === 'up' ? '#1E7468' : d === 'down' ? '#C0492B' : '#2B2622';
+      return `<span style="color:${col};font-weight:600">${label} <b style="font-family:${MONO};">${val}</b>${arr}</span>`;
+    };
+    return `${this._cause ? `<b style="color:#2B2622">${this._cause}</b><br>` : ''}${seg(spec.metricLabels[0], dirs[0], v1)} &nbsp;·&nbsp; ${seg(spec.metricLabels[1], dirs[1], v2)}`;
+  }
+
   selectChapter(i) {
     this.cur = i; const meta = this.CH[i], spec = this.SPECS[i];
     document.getElementById('ee-eyebrow').textContent = meta.eb;
@@ -844,7 +864,11 @@ class Component extends DCLogic {
       sp.innerHTML = `<span style="width:${it.dot?9:14}px;height:${it.dot?9:3}px;border-radius:${it.dot?'50%':'2px'};background:${it.c};"></span>${it.t}`; leg.appendChild(sp); });
     const ft = document.getElementById('ee-footer');
     if (spec.footer) ft.innerHTML = `${spec.footer.label} <b id="${spec.footer.id}" style="font-family:${MONO};"></b>`; else ft.innerHTML = '';
-    const chip = (host, c, dark) => { if (!c) { host.style.display = 'none'; return; } host.style.display = '';
+    // On chapters that track two numeric metrics, the price/quantity values
+    // live in the tracking bubble instead — so hide the big corner blocks
+    // (but keep their value spans in the DOM for the bubble to read).
+    const hideChips = !!spec.metricLabels;
+    const chip = (host, c, dark) => { if (!c) { host.style.display = 'none'; return; } host.style.display = hideChips ? 'none' : '';
       host.innerHTML = `<div style="font-size:9.5px;color:${dark?'#C4B7A3':'#A2937D'};font-weight:700;letter-spacing:.06em;">${c.label}</div><div style="font-family:${DISP};font-weight:700;font-size:21px;line-height:1;margin-top:2px;${dark?'':'color:#2B2622;'}"><span id="${c.id}"></span></div>`; };
     chip(document.getElementById('ee-chipA'), spec.chipA, true);
     chip(document.getElementById('ee-chipB'), spec.chipB, false);
@@ -916,7 +940,7 @@ class Component extends DCLogic {
     const wrap = document.getElementById('ee-plotwrap'), bub = document.getElementById('ee-bubble'), svg = document.getElementById('ee-svg'), txt = document.getElementById('ee-bubble-text');
     if (!wrap || !bub || !svg || !txt) return;
     bub.style.display = '';
-    txt.innerHTML = this.reason || this.ch.sbTitle || '';
+    txt.innerHTML = this.bubbleHtml();
     const w = svg.getBoundingClientRect().width || svg.clientWidth || 520, h = w * (this.P.H / this.P.W);
     let pxv, pyv;
     if (anchor.px != null) { pxv = w * (anchor.px / this.P.W); pyv = h * (anchor.py / this.P.H); }
@@ -937,15 +961,15 @@ class Component extends DCLogic {
     const spec = this.ch;
     if (scn === 'reset') { const r = spec.reset;
       if (r.target) { const oldM = spec.metrics ? spec.metrics(this, this.st) : null, ns = Object.assign({}, this.st, r.target), newM = spec.metrics ? spec.metrics(this, ns) : null;
-        this.reason = this.arrows(oldM, newM, r.cause); this.animate(() => this.st, r.target, 600, (c) => { Object.assign(this.st, c); this.redraw(); this.syncSliders(); }); }
-      else { if (r.toggle) r.toggle(this); this.reason = r.cause ? `<b style="color:#2B2622">${r.cause}</b>` : ''; this.redraw(); }
+        this.setReason(oldM, newM, r.cause); this.animate(() => this.st, r.target, 600, (c) => { Object.assign(this.st, c); this.redraw(); this.syncSliders(); }); }
+      else { if (r.toggle) r.toggle(this); this.setReason(null, null, r.cause); this.redraw(); }
       if (r.msg) this.narrate(r.msg); return;
     }
     const s = (spec.scenarios || []).find((x) => x.id === scn); if (!s) return;
     if (s.target) { const tgt = s.target(this), oldM = spec.metrics ? spec.metrics(this, this.st) : null, ns = Object.assign({}, this.st, tgt), newM = spec.metrics ? spec.metrics(this, ns) : null;
-      this.reason = this.arrows(oldM, newM, s.cause);
+      this.setReason(oldM, newM, s.cause);
       this.animate(() => this.st, tgt, 650, (c) => { Object.assign(this.st, c); this.redraw(); this.syncSliders(); }); }
-    else { if (s.toggle) s.toggle(this); this.reason = s.cause ? `<b style="color:#2B2622">${s.cause}</b>` : this.reason; this.redraw(); }
+    else { if (s.toggle) s.toggle(this); this.setReason(null, null, s.cause); this.redraw(); }
     if (s.msg) this.narrate(s.msg);
   }
 
@@ -983,7 +1007,7 @@ class Component extends DCLogic {
         let v = parseFloat(inp.value); if (isNaN(v)) v = 0; this.st[k] = v;
         const lab = document.getElementById('ee-val-' + k); if (lab) lab.textContent = this.sliderFmt(sl, v);
         const newM = this.ch.metrics ? this.ch.metrics(this, this.st) : null;
-        this.reason = this.arrows(this._slStart, newM, 'Tuned'); this.redraw(); });
+        this.setReason(this._slStart, newM, 'Tuned'); this.redraw(); });
     });
   }
 
@@ -996,9 +1020,9 @@ class Component extends DCLogic {
       const px = ((ev.clientX - r.left) / r.width) * this.P.W, py = ((ev.clientY - r.top) / r.height) * this.P.H;
       return { q: this.P.toQ(px), p: this.P.toP(py), px:px, py:py }; };
     svg.onpointerdown = (ev) => { const c = coord(ev), h = dh.hit(c); if (h) { handle = h; svg.setPointerCapture(ev.pointerId); svg.style.cursor = 'grabbing';
-        this._dragStart = spec.metrics ? spec.metrics(this, this.st) : null; const cause = dh.move(h, c); const newM = spec.metrics ? spec.metrics(this, this.st) : null; this.reason = this.arrows(this._dragStart, newM, cause); this.redraw(); this.syncSliders(); } };
+        this._dragStart = spec.metrics ? spec.metrics(this, this.st) : null; const cause = dh.move(h, c); const newM = spec.metrics ? spec.metrics(this, this.st) : null; this.setReason(this._dragStart, newM, cause); this.redraw(); this.syncSliders(); } };
     svg.onpointermove = (ev) => { const c = coord(ev); if (!handle) { svg.style.cursor = dh.hit(c) ? 'grab' : 'default'; return; }
-      const cause = dh.move(handle, c); const newM = spec.metrics ? spec.metrics(this, this.st) : null; this.reason = this.arrows(this._dragStart, newM, cause); this.redraw(); this.syncSliders(); };
+      const cause = dh.move(handle, c); const newM = spec.metrics ? spec.metrics(this, this.st) : null; this.setReason(this._dragStart, newM, cause); this.redraw(); this.syncSliders(); };
     const rel = () => { if (handle) { handle = null; svg.style.cursor = 'default'; } };
     svg.onpointerup = rel; svg.onpointercancel = rel;
   }
@@ -1017,7 +1041,7 @@ class Component extends DCLogic {
       c.style.cssText = 'cursor:pointer;border:1px solid #EADFCD;background:#fff;color:#6B6055;font-weight:600;font-size:11.5px;padding:6px 12px;border-radius:99px;';
       c.addEventListener('click', () => { Object.assign(vals, pre.values);
         prob.inputs.forEach((i) => { const el = mount.querySelector(`input[data-pk="${i.key}"]`); if (el) el.value = vals[i.key]; });
-        deselect(); c.style.background = '#DD6B4D'; c.style.color = '#fff'; c.style.borderColor = '#DD6B4D'; recompute('Worked example: ' + pre.name); });
+        deselect(); c.style.background = '#DD6B4D'; c.style.color = '#fff'; c.style.borderColor = '#DD6B4D'; recompute(pre.name); });
       chips.push(c); pw.appendChild(c); });
     const il = document.createElement('div'); il.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A2937D;margin-bottom:8px;'; il.textContent = 'Edit the numbers'; mount.appendChild(il);
     const iw = document.createElement('div'); iw.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:10px;'; mount.appendChild(iw);
@@ -1039,7 +1063,7 @@ class Component extends DCLogic {
       const oldM = self.ch.metrics ? self.ch.metrics(self, self.st) : null;
       prob.sync(self, vals);
       const newM = self.ch.metrics ? self.ch.metrics(self, self.st) : null;
-      if (self._weReady) self.reason = self.arrows(oldM, newM, cause || 'Worked example');
+      if (self._weReady) self.setReason(oldM, newM, cause || 'Worked example');
       self.redraw(); self.syncSliders(); self._weReady = true;
     }
     this._weReady = false;
