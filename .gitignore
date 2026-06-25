@@ -1,0 +1,5 @@
+# local backups / handoff leftovers
+Econeasy.original.dc.html
+uploads/
+.thumbnail
+.DS_Store
