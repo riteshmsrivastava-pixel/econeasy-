@@ -30,6 +30,13 @@
     #ee-title{font-size:26px !important;}
     #ee-btn-name{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   }
+  /* Print: show only the generated quiz sheet */
+  @media print {
+    body{background:#fff !important;}
+    header, main, #ee-scrim, #ee-menu { display:none !important; }
+    #ee-print { display:block !important; }
+    @page { margin: 12mm; }
+  }
 </style>
 </helmet>
 
@@ -58,7 +65,8 @@
   <main style="max-width:1260px;margin:0 auto;padding:30px 26px 80px;">
     <div id="ee-eyebrow" style="font-size:11px;font-weight:700;letter-spacing:.14em;color:#DD6B4D;text-transform:uppercase;margin-bottom:8px;">Markets &amp; Demand · Chapter 01</div>
     <h1 id="ee-title" style="font-family:'Bricolage Grotesque';font-weight:700;font-size:34px;line-height:1.05;letter-spacing:-.02em;color:#2B2622;margin:0 0 9px;">Supply &amp; Demand</h1>
-    <p id="ee-lead" style="font-size:15px;line-height:1.55;color:#6B6055;margin:0 0 22px;max-width:680px;"></p>
+    <p id="ee-lead" style="font-size:15px;line-height:1.55;color:#6B6055;margin:0 0 12px;max-width:680px;"></p>
+    <div id="ee-explain" style="margin:0 0 22px;"></div>
 
     <div id="ee-workspace" style="display:grid;grid-template-columns:minmax(0,1fr) 384px;gap:28px;align-items:start;">
       <!-- LEFT: graph + controls -->
@@ -115,6 +123,7 @@
     <section id="ee-practice" style="margin-top:44px;"></section>
   </main>
 
+  <div id="ee-print" style="display:none;"></div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -759,6 +768,58 @@ var PRACTICE = {
   ]
 };
 
+/* ============== PLAIN-LANGUAGE "WHAT IS THIS?" EXPLAINERS ================== */
+var EXPLAIN = {
+  sd:{plain:"Buyers want more of something when it's cheap. Sellers want to make more when it's expensive. The price settles at the one spot where the amount people want to buy exactly equals the amount sellers want to sell — the <b>equilibrium</b>.",
+    example:"Strawberries at a market. Price them at $10 a box and almost no one buys — boxes pile up. Price them at $1 and they sell out in minutes, leaving people empty-handed. Around $3, the last box sells just as the last happy customer leaves. That's the equilibrium price.",
+    words:[["Demand","how much people want to buy at each price (more when cheaper)."],["Supply","how much sellers want to sell at each price (more when pricier)."],["Equilibrium","the price where buyers' and sellers' plans match — nothing left over, no one missing out."]]},
+  elastic:{plain:"Elasticity measures how <b>touchy</b> buyers are about price. If a small price rise makes lots of people stop buying, demand is <b>elastic</b> (sensitive). If people keep buying no matter what, it's <b>inelastic</b> (stubborn).",
+    example:"Raise the price of one brand of soda and shoppers just grab a different brand — very sensitive. Raise the price of life-saving medicine and people still buy it because they have to — barely sensitive. That difference is elasticity.",
+    words:[["Elastic","buyers react a lot; a price cut can earn you more because so many more people buy."],["Inelastic","buyers barely react; you can raise the price and still keep most of your sales."],["|E| (sensitivity)","the number that captures this. Above 1 = sensitive, below 1 = stubborn."]]},
+  consumer:{plain:"You have a limited amount of money and many things you'd like. You spend it on the mix that makes you happiest. As something gets more expensive, you naturally buy less of it and more of the cheaper stuff.",
+    example:"You've got $20 for lunch this week. Coffee and sandwiches both tempt you. If coffee gets pricier, you'll buy fewer coffees and a few more sandwiches — landing on the combo that feels best for your $20.",
+    words:[["Budget line","every combination of two things you can just afford with your money."],["Best buy (optimal bundle)","the affordable mix that makes you happiest."],["Happiness (utility)","economists' word for how satisfied a choice makes you."]]},
+  costs:{plain:"Making things costs money in two flavors: costs that stay the same no matter how much you make, and costs that grow with each extra item. Spreading the fixed costs over more items makes each item cheaper — up to a point.",
+    example:"A bakery pays rent and buys an oven whether it bakes 1 loaf or 1,000 (fixed cost). Flour and electricity go up with every loaf (variable cost). Baking more spreads the rent across more loaves, so each loaf gets cheaper — until the kitchen gets crowded and costs creep back up.",
+    words:[["Fixed cost","doesn't change with how much you make (rent, machines)."],["Variable cost","grows with each item (ingredients, power)."],["Marginal cost (\"next loaf\")","what it costs to make just one more."],["Average cost (\"typical loaf\")","total cost shared across every item."]]},
+  profit:{plain:"Keep making more as long as the next item sells for more than it costs to make. Stop right when one more would cost more than it earns. That's the point of biggest profit.",
+    example:"A juice stall earns $3 per cup. Early cups are cheap to make, so each adds profit. As it squeezes more, ingredients and effort per cup rise. The moment the next cup would cost more than $3 to make, the stall stops — one more would lose money.",
+    words:[["Profit","money in minus money out: (price − average cost) × number sold."],["Marginal cost","the cost of one more item."],["Shut-down point","if the price can't even cover the make-each-item cost, it's better to close than keep selling."]]},
+  monopoly:{plain:"A monopoly is the <b>only</b> seller of something, so it controls the price. It picks the price that earns it the most — making fewer items and charging more than a competitive market would. Some people who'd happily have bought at a fair price get priced out; those lost sales are value the world misses out on.",
+    example:"One company owns the only bridge into town and charges a toll. A busy road might let 100 cars cross cheaply. The bridge owner sets a high toll so only 60 cars cross — earning more per car but turning away 40 drivers who'd gladly have paid a smaller toll. Those 40 trips are the trades left on the table.",
+    words:[["Monopoly","the single seller of a product, with no direct competition."],["Markup","how far the price sits above what it actually cost to make the item."],["Marginal revenue (\"extra money\")","the extra cash from selling one more. For a monopoly it drops fast, because to sell more it must lower the price for everyone."],["Deadweight loss (\"lost value\")","the worth of all the sales that never happen because the price is set too high."]]},
+  game:{plain:"When two sides each make a choice and the result depends on what <b>both</b> do, smart players can still end up in a spot that's worse for everyone — because each is just protecting itself.",
+    example:"Two rival shops decide whether to hold prices or start a price war. If both hold, both do well. But each fears the other will undercut, so both cut prices — and both earn less than if they'd just held. Each acted sensibly, yet together they lost. That's the prisoner's dilemma.",
+    words:[["Dominant strategy","a move that's your best choice no matter what the other side does."],["Nash equilibrium","the outcome where neither side wants to change its move alone."],["Prisoner's dilemma","a classic case where both protecting themselves leaves both worse off than cooperating would."]]},
+  tax:{plain:"When the government taxes a sale, it splits one price into two: a higher price buyers pay and a lower price sellers keep, with the tax in between. Who feels it more depends on who can more easily walk away.",
+    example:"Put a $2 tax on coffee. Buyers might pay $1 more and sellers keep $1 less — split evenly. But if coffee drinkers are addicted and can't quit, they swallow most of the tax, while the café barely feels it.",
+    words:[["Tax incidence","who actually bears the cost of a tax, regardless of who hands it to the government."],["Tax wedge","the gap the tax drives between the buyer's price and the seller's price."],["Lost sales (deadweight loss)","purchases that no longer happen because the tax made things pricier."]]},
+  pricectrl:{plain:"Sometimes a law caps a price (a <b>ceiling</b>) or sets a minimum (a <b>floor</b>). If the cap is below the natural price, more people want it than sellers will provide — a shortage. If the floor is above the natural price, sellers offer more than people want — a surplus.",
+    example:"<b>Ceiling:</b> rent control caps rents low, so lots of people want flats but few are offered — a shortage and long waitlists. <b>Floor:</b> a minimum wage sets pay above what some employers would offer, so more people want jobs than there are jobs — a labor surplus (unemployment).",
+    words:[["Price ceiling","a legal maximum price (e.g. rent control)."],["Price floor","a legal minimum price (e.g. minimum wage)."],["Binding","when the rule actually changes things (a ceiling below, or floor above, the natural price)."],["Shortage / surplus","too many buyers and not enough goods, or too many goods and not enough buyers."]]},
+  extern:{plain:"Sometimes a sale hurts (or helps) people who aren't the buyer or seller. When it hurts bystanders, the market makes too much of it, because the seller doesn't count the harm. Charging the seller exactly that harm fixes it.",
+    example:"A factory makes cheap products but its smoke bothers the whole neighborhood. The factory only counts its own costs, so it makes a lot. If it had to pay for the harm its smoke causes, it would make less — the amount that's actually best for everyone, neighbors included.",
+    words:[["Externality","a cost (or benefit) that lands on people outside the deal."],["True cost (social cost)","the seller's own cost plus the harm to others."],["Corrective charge (Pigouvian tax)","a fee equal to the harm that nudges the seller to the right amount."]]},
+  trade:{plain:"Two people (or countries) both end up with more stuff if each focuses on the job they give up the least to do, then they swap. What matters isn't who's faster — it's who sacrifices less.",
+    example:"Two roommates split chores. One is great at both cooking and cleaning, the other slower at both. They still both win if the fast one focuses on whichever chore the slow one is comparatively worst at, and they trade. Each does what they \"skip the least\" for, swap, and both have more free time than going it alone.",
+    words:[["Opportunity cost (\"skip-cost\")","what you give up to do something else."],["Comparative advantage","being the one who gives up the least to make a particular thing — this decides who makes what, not raw speed."],["Gains from trade","both sides ending up better off after specializing and swapping."]]}
+};
+
+/* ===================== TIPS FOR THE QUIZ SHEET ============================ */
+var TIPS = {
+  sd:["Set demand = supply and solve for P, then plug back in for Q.","A shift moves the whole curve; a price change just slides along it.","Demand-right → P and Q both up. Supply-right → P down, Q up."],
+  elastic:["Elasticity = % change in quantity ÷ % change in price (use the average/midpoint to stay symmetric).","|E| > 1 elastic → cut price to earn more; |E| < 1 inelastic → raise price.","On a straight demand line the top is elastic, the bottom inelastic, the middle unit-elastic (max revenue)."],
+  consumer:["Spend a fixed slice of income on each good: a on X, (1−a) on Y.","Quantity of a good = money spent on it ÷ its price.","Best bundle = where the budget line just touches the highest indifference curve (MRS = price ratio)."],
+  costs:["ATC = (fixed + variable) ÷ quantity; MC = change in total cost ÷ change in quantity.","MC below ATC pulls the average down; MC above pushes it up — they cross at minimum ATC.","Fixed cost per unit always falls as you make more."],
+  profit:["Make units until MC = price (one more would cost more than it sells for).","Profit = (price − ATC) × quantity.","Shut-down rule: price < AVC → stop; AVC ≤ price < ATC → keep going at a loss."],
+  monopoly:["MR has the same intercept as demand but twice the slope: MR = a − 2bQ.","Set MR = MC for the quantity, then read the price off the demand curve.","Markup: (P − MC)/P = −1/elasticity — less elastic demand → bigger markup."],
+  game:["Find each player's best reply to each of the rival's choices.","A dominant strategy beats the alternative no matter what the rival does.","Nash = the cell where neither wants to switch alone. A true dilemma needs T > R > P > S."],
+  tax:["A tax opens a wedge: buyer price − seller price = tax.","New quantity Qt = (a − c − t)/(b + d); read Pb off demand, Ps off supply.","The more inelastic (steeper) side bears more; equal slopes → 50/50."],
+  pricectrl:["A ceiling binds below the market price (→ shortage); a floor binds above it (→ surplus).","At the controlled price, Qd from demand and Qs from supply; the short side sets how much trades.","Deadweight loss = ½ × (lost quantity) × (price gap) at the traded amount."],
+  extern:["Social cost = the seller's private cost + the harm to others.","Market makes too much; the efficient amount is where demand meets social cost.","A Pigouvian tax equal to the harm restores the efficient quantity."],
+  trade:["Opportunity cost of a good = how much of the other good you give up to make one more.","Whoever has the lower opportunity cost should specialize in that good (comparative advantage).","Trade at a rate between the two opportunity costs; both end up beyond their own frontier."]
+};
+
 /* ================================ ENGINE ================================== */
 class Component extends DCLogic {
   componentDidMount() {
@@ -852,7 +913,7 @@ class Component extends DCLogic {
     this.ch = spec; this.st = JSON.parse(JSON.stringify(spec.init)); this.reason = '';
     document.getElementById('ee-sb-icon').textContent = spec.icon;
     document.getElementById('ee-sb-title').textContent = spec.sbTitle;
-    this.buildChrome(); this.buildPlot(); this.buildProblem(); this.buildPractice(); this.redraw(); this.markActive();
+    this.buildChrome(); this.buildExplain(); this.buildPlot(); this.buildProblem(); this.buildPractice(); this.redraw(); this.markActive();
     setTimeout(() => { if (this.cur === i) this.redraw(); }, 40);
   }
   specName(i) { return ['Supply & Demand','Elasticity','Consumer Choice','Costs','Profit Max','Monopoly','Game Theory','Tax Incidence','Price Ceilings & Floors','Externalities','Trade'][i]; }
@@ -886,7 +947,7 @@ class Component extends DCLogic {
     const rst = document.createElement('button'); rst.dataset.scn = 'reset'; rst.title = 'Reset to defaults'; rst.setAttribute('aria-label', 'Reset to defaults');
     rst.style.cssText = 'cursor:pointer;border:none;background:transparent;color:#A89A86;font-weight:600;font-size:15px;padding:10px 12px;border-radius:99px;'; rst.textContent = '↺'; dock.appendChild(rst);
     if (spec.tune) { const tn = document.createElement('button'); tn.id = 'ee-tune'; tn.setAttribute('aria-label', 'Tune the numbers with sliders'); tn.title = 'Tune the numbers';
-      tn.style.cssText = 'cursor:pointer;border:none;background:#F8F1E6;color:#6B6055;font-weight:600;font-size:13px;padding:10px 14px;border-radius:99px;'; tn.textContent = '⚙ Tune'; dock.appendChild(tn); }
+      tn.style.cssText = 'cursor:pointer;border:1px solid #F2C9B7;background:#FBE7DD;color:#C0492B;font-weight:700;font-size:13px;padding:10px 14px;border-radius:99px;'; tn.textContent = '⚙ Tune'; dock.appendChild(tn); }
     const panel = document.getElementById('ee-sliders'), grid = document.getElementById('ee-slider-grid');
     panel.style.display = 'none'; grid.innerHTML = '';
     if (spec.sliders) spec.sliders.forEach((sl) => { const cell = document.createElement('div');
@@ -981,7 +1042,8 @@ class Component extends DCLogic {
     });
     const tune = document.getElementById('ee-tune');
     if (tune) tune.addEventListener('click', () => { const panel = document.getElementById('ee-sliders'); const open = panel.style.display === 'none';
-      panel.style.display = open ? '' : 'none'; tune.style.background = open ? '#2B2622' : '#F8F1E6'; tune.style.color = open ? '#FBF6EE' : '#6B6055'; });
+      panel.style.display = open ? '' : 'none';
+      tune.style.background = open ? '#DD6B4D' : '#FBE7DD'; tune.style.color = open ? '#fff' : '#C0492B'; tune.style.borderColor = open ? '#DD6B4D' : '#F2C9B7'; });
   }
   wirePlay(btn, order) {
     let playing = false, i = 0, timer = null;
@@ -1076,10 +1138,14 @@ class Component extends DCLogic {
     const items = (typeof PRACTICE !== 'undefined' && PRACTICE[this.ch.key]) || [];
     if (!items.length) { mount.style.display = 'none'; mount.innerHTML = ''; return; }
     mount.style.display = '';
-    let html = `<div style="display:flex;align-items:center;gap:11px;margin-bottom:18px;">
-      <div style="width:34px;height:34px;border-radius:10px;background:#FBE7DD;color:#DD6B4D;display:flex;align-items:center;justify-content:center;font-size:17px;">✎</div>
-      <div><div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A2937D;">Practice questions</div>
-      <div style="font-family:${DISP};font-weight:700;font-size:21px;color:#2B2622;">Problems from the course</div></div></div>`;
+    let html = `<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <div style="width:34px;height:34px;border-radius:10px;background:#FBE7DD;color:#DD6B4D;display:flex;align-items:center;justify-content:center;font-size:17px;">✎</div>
+        <div><div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A2937D;">Practice questions</div>
+        <div style="font-family:${DISP};font-weight:700;font-size:21px;color:#2B2622;">Problems from the course</div></div>
+      </div>
+      <button id="ee-print-btn" aria-label="Download this chapter as a printable quiz sheet (PDF)" title="Print / save as PDF" style="cursor:pointer;border:1px solid #DD6B4D;background:#fff;color:#C0492B;font-weight:700;font-size:13px;padding:9px 16px;border-radius:99px;display:inline-flex;align-items:center;gap:7px;">🖨 Quiz sheet (PDF)</button>
+    </div>`;
     html += '<div style="display:grid;gap:14px;">';
     items.forEach((it, i) => {
       const steps = (it.steps || []).map((s) => `<div style="margin:11px 0;padding-left:13px;border-left:2px solid #E0A33D;"><div style="font-size:12.5px;color:#C08A2E;font-weight:700;margin-bottom:3px;">${s.h}</div><div style="font-size:13px;color:#3A332C;line-height:1.5;">${s.p}</div>${s.calc ? `<div style="font-family:Space Mono,monospace;background:#FFFDF8;border:1px solid #EFE7DA;border-radius:8px;padding:8px 10px;margin-top:6px;font-size:12.5px;color:#6B6055;white-space:pre-wrap;">${s.calc}</div>` : ''}</div>`).join('');
@@ -1103,6 +1169,66 @@ class Component extends DCLogic {
       b.textContent = open ? 'Hide solution ▴' : 'Show solution ▾';
       b.style.background = open ? '#2B2622' : '#FBF6EE'; b.style.color = open ? '#FBF6EE' : '#6B6055';
     }); });
+    const pb = document.getElementById('ee-print-btn'); if (pb) pb.addEventListener('click', () => this.buildSheet());
+  }
+
+  /* Plain-language "What is this?" box: definition, example, glossary. */
+  buildExplain() {
+    const mount = document.getElementById('ee-explain'); if (!mount) return;
+    const e = (typeof EXPLAIN !== 'undefined') && EXPLAIN[this.ch.key];
+    if (!e) { mount.style.display = 'none'; mount.innerHTML = ''; return; }
+    mount.style.display = '';
+    const words = e.words.map((w) => `<div style="margin:7px 0;"><b style="color:#2B2622;">${w[0]}</b> <span style="color:#6B6055;">— ${w[1]}</span></div>`).join('');
+    mount.innerHTML = `
+      <button id="ee-explain-btn" aria-label="Plain-language explanation of this chapter" style="cursor:pointer;border:1px solid #F2C9B7;background:#FBE7DD;color:#C0492B;font-weight:700;font-size:13px;padding:8px 15px;border-radius:99px;display:inline-flex;align-items:center;gap:7px;">💡 What is this?</button>
+      <div id="ee-explain-body" style="display:none;margin-top:12px;background:#fff;border:1px solid #F0E7D9;border-radius:16px;padding:18px 20px;box-shadow:0 8px 24px rgba(67,48,30,.06);max-width:680px;">
+        <div style="font-size:14px;line-height:1.6;color:#2B2622;">${e.plain}</div>
+        <div style="margin-top:12px;background:#FBF6EE;border-left:3px solid #E0A33D;border-radius:8px;padding:10px 13px;font-size:13px;line-height:1.55;color:#3A332C;"><b style="color:#B07A12;">Example —</b> ${e.example}</div>
+        <div style="margin-top:14px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A2937D;">Words to know</div>
+        <div style="margin-top:6px;font-size:13px;line-height:1.45;">${words}</div>
+      </div>`;
+    const btn = document.getElementById('ee-explain-btn'), body = document.getElementById('ee-explain-body');
+    btn.addEventListener('click', () => { const open = body.style.display === 'none'; body.style.display = open ? '' : 'none';
+      btn.textContent = open ? '💡 Hide explanation' : '💡 What is this?'; btn.style.background = open ? '#DD6B4D' : '#FBE7DD'; btn.style.color = open ? '#fff' : '#C0492B'; });
+  }
+
+  /* Build a printable quiz sheet (chart + tips + key idea + glossary +
+     practice questions with working space + an answers page) and print it. */
+  buildSheet() {
+    const i = this.cur, meta = this.CH[i], spec = this.ch, name = this.specName(i);
+    const lead = (document.getElementById('ee-lead') || {}).textContent || '';
+    const keyHtml = spec.problem ? spec.problem.keyHtml : '';
+    const tips = (typeof TIPS !== 'undefined' && TIPS[spec.key]) || [];
+    const items = (typeof PRACTICE !== 'undefined' && PRACTICE[spec.key]) || [];
+    const ex = (typeof EXPLAIN !== 'undefined' && EXPLAIN[spec.key]) || null;
+    const svg = document.getElementById('ee-svg');
+    const svgHTML = svg ? svg.outerHTML : '';
+    const h2 = (t) => `<h2 style="font-family:${DISP};font-size:16px;color:#DD6B4D;margin:20px 0 8px;border-bottom:1px solid #EADFCD;padding-bottom:4px;">${t}</h2>`;
+    const tipsHtml = tips.length ? `${h2('Tips for solving')}<ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.65;color:#2B2622;">${tips.map((t) => `<li>${t}</li>`).join('')}</ul>` : '';
+    const wordsHtml = ex ? `${h2('Words to know')}<div style="font-size:13px;line-height:1.5;">${ex.words.map((w) => `<div style="margin:5px 0;"><b>${w[0]}</b> — ${w[1]}</div>`).join('')}</div>` : '';
+    const qHtml = items.map((it, n) => `<div style="margin:14px 0;page-break-inside:avoid;"><div style="font-size:13.5px;line-height:1.55;"><b>Q${n + 1}.</b> ${it.q}</div><div style="margin-top:8px;border-bottom:1px solid #D9CDB8;height:17px;"></div><div style="border-bottom:1px solid #D9CDB8;height:17px;"></div><div style="border-bottom:1px solid #D9CDB8;height:17px;"></div></div>`).join('');
+    const aHtml = items.map((it, n) => {
+      const steps = (it.steps || []).map((s) => `<div style="margin:7px 0;padding-left:11px;border-left:2px solid #E0A33D;"><div style="font-size:12.5px;color:#C08A2E;font-weight:700;">${s.h}</div><div style="font-size:12.5px;color:#2B2622;line-height:1.45;">${s.p}</div>${s.calc ? `<div style="font-family:Space Mono,monospace;background:#FAF4EA;border:1px solid #EFE7DA;border-radius:6px;padding:6px 8px;margin-top:4px;font-size:11.5px;color:#444;white-space:pre-wrap;">${s.calc}</div>` : ''}</div>`).join('');
+      return `<div style="margin:14px 0;page-break-inside:avoid;"><div style="font-weight:700;font-size:13px;color:#2B2622;">Q${n + 1} — answer</div>${it.answer ? `<div style="background:#2B2622;color:#FBD9A0;border-radius:8px;padding:8px 11px;margin:6px 0;font-size:12.5px;font-weight:600;">${it.answer}</div>` : ''}${steps}</div>`;
+    }).join('');
+    const sheet = `<div style="font-family:'Hanken Grotesk',sans-serif;color:#2B2622;max-width:780px;margin:0 auto;padding:4px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #DD6B4D;padding-bottom:8px;">
+          <div style="font-family:${DISP};font-weight:700;font-size:20px;">Econeasy · Quiz Sheet</div>
+          <div style="color:#8A8076;font-size:11.5px;">${meta.eb}</div>
+        </div>
+        <h1 style="font-family:${DISP};font-weight:700;font-size:26px;margin:14px 0 6px;">${name}</h1>
+        <p style="color:#555;font-size:12.5px;line-height:1.5;margin:0 0 10px;">${lead}</p>
+        <div style="border:1px solid #EADFCD;border-radius:10px;padding:10px 12px;">${svgHTML}</div>
+        ${tipsHtml}
+        ${keyHtml ? `${h2('Key idea')}<div style="font-size:13px;line-height:1.55;">${keyHtml}</div>` : ''}
+        ${wordsHtml}
+        ${h2('Practice questions')}${qHtml}
+        <div style="page-break-before:always;"></div>
+        ${h2('Answers')}${aHtml}
+        <div style="margin-top:24px;color:#A2937D;font-size:10.5px;text-align:center;">Generated from Econeasy · ${name} — use your browser's "Save as PDF"</div>
+      </div>`;
+    const pm = document.getElementById('ee-print'); if (pm) pm.innerHTML = sheet;
+    window.print();
   }
 
   wireNav() {
