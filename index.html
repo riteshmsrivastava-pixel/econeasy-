@@ -1201,8 +1201,17 @@ class Component extends DCLogic {
     const tips = (typeof TIPS !== 'undefined' && TIPS[spec.key]) || [];
     const items = (typeof PRACTICE !== 'undefined' && PRACTICE[spec.key]) || [];
     const ex = (typeof EXPLAIN !== 'undefined' && EXPLAIN[spec.key]) || null;
-    const svg = document.getElementById('ee-svg');
-    const svgHTML = svg ? svg.outerHTML : '';
+    // Clone the chart and give it an explicit size so it prints reliably
+    // (an auto-height SVG is a common cause of a blown-up / blank print page).
+    let svgHTML = '';
+    const svgEl = document.getElementById('ee-svg');
+    if (svgEl) {
+      const clone = svgEl.cloneNode(true);
+      const vb = (clone.getAttribute('viewBox') || '0 0 520 360').split(/\s+/).map(Number);
+      const w = 540, hgt = (vb[2] && vb[3]) ? Math.round(w * vb[3] / vb[2]) : 360;
+      clone.setAttribute('width', w); clone.setAttribute('height', hgt); clone.removeAttribute('style');
+      svgHTML = '<div style="text-align:center;">' + clone.outerHTML + '</div>';
+    }
     const h2 = (t) => `<h2 style="font-family:${DISP};font-size:16px;color:#DD6B4D;margin:20px 0 8px;border-bottom:1px solid #EADFCD;padding-bottom:4px;">${t}</h2>`;
     const tipsHtml = tips.length ? `${h2('Tips for solving')}<ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.65;color:#2B2622;">${tips.map((t) => `<li>${t}</li>`).join('')}</ul>` : '';
     const wordsHtml = ex ? `${h2('Words to know')}<div style="font-size:13px;line-height:1.5;">${ex.words.map((w) => `<div style="margin:5px 0;"><b>${w[0]}</b>, ${w[1]}</div>`).join('')}</div>` : '';
