@@ -73,7 +73,7 @@
       <div>
         <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:9px;flex-wrap:wrap;">
           <div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A2937D;">Interactive chart</div>
-          <div style="font-size:11.5px;color:#A2937D;">Your sandbox — drag, Play or Tune. Editing the <b style="color:#8A8076;">worked example →</b> moves it too.</div>
+          <div style="font-size:11.5px;color:#A2937D;">Your sandbox: drag, Play or Tune. Editing the <b style="color:#8A8076;">worked example →</b> moves it too.</div>
         </div>
         <div style="position:relative;background:#fff;border-radius:24px;padding:18px 22px 12px;box-shadow:0 14px 38px rgba(67,48,30,.10);border:1px solid #F0E7D9;">
           <div id="ee-plotwrap" style="position:relative;">
@@ -128,7 +128,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 /* ============================================================================
-   Econeasy — multi-chapter engine.
+   Econeasy, multi-chapter engine.
    Each chapter is a `spec` (see CHAPTERS). The Component is a generic engine
    that builds the plot, controls, sliders, drag and the worked-example sidebar
    from the active spec. The chart math is ported from the original econ-lab
@@ -148,7 +148,7 @@ function f2(n){ return Math.round(n*100)/100; }
 /* ============================== CHAPTER SPECS ============================== */
 var CHAPTERS = [
 
-/* 01 — SUPPLY & DEMAND */
+/* 01, SUPPLY & DEMAND */
 {
   key:'sd', icon:'📐', sbTitle:'Find the equilibrium',
   QMAX:100, PMAX:100, xlabel:'Quantity', ylabel:'Price ($)',
@@ -159,8 +159,8 @@ var CHAPTERS = [
   sliders:[{k:'dInt',label:'Demand intercept',min:40,max:130,step:1,color:C.dem,dec:0},{k:'dSlope',label:'Demand slope',min:0.1,max:4,step:0.1,color:C.dem,dec:1},{k:'sInt',label:'Supply intercept',min:-20,max:55,step:1,color:C.sup,dec:0},{k:'sSlope',label:'Supply slope',min:0.1,max:3,step:0.1,color:C.sup,dec:1}],
   tune:true, tip:'Tip: grab the red or green line in the chart and drag it to shift the curve.',
   scenarios:[
-    {id:'dRise',label:'↑ Demand',cause:'Demand rises',target:function(self){return {dInt:self.clamp(self.st.dInt+28,40,130)};},msg:"<b>Demand shifts right.</b> Buyers want more at every price, so the cross slides up the supply curve — <span style='color:#1E7468;font-weight:700'>price ↑ and quantity ↑</span>."},
-    {id:'dFall',label:'↓ Demand',cause:'Demand falls',target:function(self){return {dInt:self.clamp(self.st.dInt-28,40,130)};},msg:"<b>Demand shifts left.</b> Buyers want less at every price — the equilibrium slides down: <span style='color:#C0492B;font-weight:700'>price ↓ and quantity ↓</span>."},
+    {id:'dRise',label:'↑ Demand',cause:'Demand rises',target:function(self){return {dInt:self.clamp(self.st.dInt+28,40,130)};},msg:"<b>Demand shifts right.</b> Buyers want more at every price, so the cross slides up the supply curve, <span style='color:#1E7468;font-weight:700'>price ↑ and quantity ↑</span>."},
+    {id:'dFall',label:'↓ Demand',cause:'Demand falls',target:function(self){return {dInt:self.clamp(self.st.dInt-28,40,130)};},msg:"<b>Demand shifts left.</b> Buyers want less at every price, the equilibrium slides down: <span style='color:#C0492B;font-weight:700'>price ↓ and quantity ↓</span>."},
     {id:'sRise',label:'↑ Supply',cause:'Supply rises',target:function(self){return {sInt:self.clamp(self.st.sInt-20,-20,55)};},msg:"<b>Supply shifts right.</b> Cheaper inputs or better tech. Sliding down the demand curve: <span style='color:#C0492B;font-weight:700'>price ↓</span> but <span style='color:#1E7468;font-weight:700'>quantity ↑</span>."},
     {id:'sFall',label:'↓ Supply',cause:'Supply falls',target:function(self){return {sInt:self.clamp(self.st.sInt+22,-20,55)};},msg:"<b>Supply shifts left.</b> Costs rose or a bad harvest. Climbing the demand curve: <span style='color:#1E7468;font-weight:700'>price ↑</span>, <span style='color:#C0492B;font-weight:700'>quantity ↓</span>."},
   ],
@@ -187,7 +187,7 @@ var CHAPTERS = [
     hit:function(c){ var dP=self.st.dInt-self.st.dSlope*c.q, sP=self.st.sInt+self.st.sSlope*c.q; return Math.abs(c.p-dP)<8?'d':(Math.abs(c.p-sP)<8?'s':false); },
     move:function(h,c){ if(h==='d') self.st.dInt=self.clamp(c.p+self.st.dSlope*c.q,40,130); else self.st.sInt=self.clamp(c.p-self.st.sSlope*c.q,-20,55); return h==='d'?'Demand shift':'Supply shift'; } }; },
   problem:{
-    intro:'Demand <b style="color:#2B2622">P = a − bQ</b>, supply <b style="color:#2B2622">P = c + dQ</b>. Pick a market or edit any number — the graph and the solution update live.',
+    intro:'Demand <b style="color:#2B2622">P = a − bQ</b>, supply <b style="color:#2B2622">P = c + dQ</b>. Pick a market or edit any number, the graph and the solution update live.',
     keyHtml:'<b style="color:#2B2622">Big idea:</b> equilibrium is where buyers’ and sellers’ plans line up. The gap (a − c) and combined steepness (b + d) set how much trades.',
     inputs:[{key:'a',label:'Demand intercept <b>a</b>',value:90,step:1},{key:'b',label:'Demand slope <b>b</b>',value:0.8,step:0.1},{key:'c',label:'Supply intercept <b>c</b>',value:10,step:1},{key:'d',label:'Supply slope <b>d</b>',value:0.7,step:0.1}],
     presets:[{name:'Everyday good',values:{a:90,b:0.8,c:10,d:0.7}},{name:'Luxury',values:{a:100,b:4,c:20,d:1}},{name:'Commodity',values:{a:80,b:2,c:10,d:0.5}},{name:'Demand boom',values:{a:130,b:0.8,c:10,d:0.7}},{name:'Supply crunch',values:{a:90,b:0.8,c:55,d:3}}],
@@ -199,7 +199,7 @@ var CHAPTERS = [
   }
 },
 
-/* 02 — ELASTICITY */
+/* 02, ELASTICITY */
 {
   key:'elastic', icon:'📈', sbTitle:'Measure how much buyers react',
   QMAX:100, PMAX:100, xlabel:'Quantity sold', ylabel:'Price ($)', A:100, B:1, init:{ Q:50 },
@@ -211,7 +211,7 @@ var CHAPTERS = [
   scenarios:[
     {id:'up',label:'⬆ Sensitive',cause:'Up the line',target:function(){return {Q:20};},msg:"<b>Up here buyers are very sensitive (|E| &gt; 1).</b> Price is high, few are buying. A small price cut wins lots of extra sales, so cutting the price <span style='color:#1E7468;font-weight:700'>brings in more money</span>."},
     {id:'mid',label:'● Middle',cause:'The middle',target:function(){return {Q:50};},msg:"<b>Right in the middle (|E| = 1)</b> the gold box of total spending is as big as it gets. Nudging the price either way barely changes the money taken in."},
-    {id:'down',label:'⬇ Stubborn',cause:'Down the line',target:function(){return {Q:80};},msg:"<b>Down here buyers barely react (|E| &lt; 1).</b> Price is low, almost everyone already buys. Cutting the price adds few sales, so you'd <span style='color:#C0492B;font-weight:700'>take in less money</span> — raise the price instead."},
+    {id:'down',label:'⬇ Stubborn',cause:'Down the line',target:function(){return {Q:80};},msg:"<b>Down here buyers barely react (|E| &lt; 1).</b> Price is low, almost everyone already buys. Cutting the price adds few sales, so you'd <span style='color:#C0492B;font-weight:700'>take in less money</span>, raise the price instead."},
   ],
   play:['up','mid','down'],
   reset:{target:{Q:50},cause:'Reset',msg:'Back to the middle of the demand line, where total spending is largest.'},
@@ -230,22 +230,22 @@ var CHAPTERS = [
   },
   drag:function(self){ return {hit:function(c){ return Math.abs(c.q-self.st.Q)<8?'dot':false; }, move:function(h,c){ self.st.Q=self.clamp(c.q,2,98); return 'Slide the dot'; }}; },
   problem:{
-    intro:'A shop changes its price and counts how many it sells <b style="color:#2B2622">before</b> and <b style="color:#2B2622">after</b>. Pick a real example or type your own — the dot jumps to match.',
+    intro:'A shop changes its price and counts how many it sells <b style="color:#2B2622">before</b> and <b style="color:#2B2622">after</b>. Pick a real example or type your own, the dot jumps to match.',
     keyHtml:'<b style="color:#2B2622">Big idea:</b> |E| above 1 = buyers react a lot (cut the price to earn more); below 1 = they barely react (raise the price).',
     inputs:[{key:'P1',label:'Price before ($)',value:12,step:1},{key:'Q1',label:'Sold before',value:50,step:1},{key:'P2',label:'Price after ($)',value:9,step:1},{key:'Q2',label:'Sold after',value:68,step:1}],
     presets:[{name:'Movie tickets',values:{P1:12,Q1:50,P2:9,Q2:68}},{name:'Medicine',values:{P1:100,Q1:48,P2:80,Q2:50}},{name:'Gasoline',values:{P1:4,Q1:100,P2:3,Q2:108}},{name:'Coffee',values:{P1:5,Q1:40,P2:4,Q2:55}},{name:'Tipping point',values:{P1:10,Q1:50,P2:8,Q2:62}}],
     solve:function(v){ var P1=v.P1,Q1=v.Q1,P2=v.P2,Q2=v.Q2; if(P1===P2||(Q1+Q2)===0||(P1+P2)===0) return {answer:"If the price <b>doesn't change</b> (or everything is zero), there's nothing to measure. Set two different prices.",steps:[]};
       var dQ=(Q2-Q1)/((Q1+Q2)/2), dP=(P2-P1)/((P1+P2)/2), E=dQ/dP, aE=Math.abs(E), kind=aE>1?'react a lot (elastic)':(aE<1?'barely react (inelastic)':'sit at the tipping point');
       return {answer:'Sensitivity |E| = <b>'+f2(aE)+'</b> → buyers <b>'+kind+'</b>. Cutting the price '+(aE>1?'<span style="color:#1E7468;font-weight:700">brought in more money</span>':'<span style="color:#C0492B;font-weight:700">brought in less money</span>')+'.',
-        steps:[{h:'1 · The before & after',p:'Two snapshots: the price and how many sold.',calc:'Before: $'+f2(P1)+', '+f2(Q1)+' sold\nAfter:  $'+f2(P2)+', '+f2(Q2)+' sold'},{h:'2 · % change in quantity',p:'Divide by the average so it works either way.',calc:'% = '+f2(Q2-Q1)+' / '+f2((Q1+Q2)/2)+' = '+f2(dQ)},{h:'3 · % change in price',p:'Same averaging for price.',calc:'% = '+f2(P2-P1)+' / '+f2((P1+P2)/2)+' = '+f2(dP)},{h:'4 · Compare',p:'Sensitivity is the quantity change over the price change.',calc:'|E| = '+f2(dQ)+' ÷ '+f2(dP)+' = '+f2(aE)},{h:'5 · What it means',p:aE>1?'Above 1: buyers react strongly, so a price cut wins enough sales to earn more.':'Below 1: buyers barely move, so a price cut throws money away — raise the price.',calc:'|E| = '+f2(aE)+(aE>1?' > 1':(aE<1?' < 1':' = 1'))}]}; },
+        steps:[{h:'1 · The before & after',p:'Two snapshots: the price and how many sold.',calc:'Before: $'+f2(P1)+', '+f2(Q1)+' sold\nAfter:  $'+f2(P2)+', '+f2(Q2)+' sold'},{h:'2 · % change in quantity',p:'Divide by the average so it works either way.',calc:'% = '+f2(Q2-Q1)+' / '+f2((Q1+Q2)/2)+' = '+f2(dQ)},{h:'3 · % change in price',p:'Same averaging for price.',calc:'% = '+f2(P2-P1)+' / '+f2((P1+P2)/2)+' = '+f2(dP)},{h:'4 · Compare',p:'Sensitivity is the quantity change over the price change.',calc:'|E| = '+f2(dQ)+' ÷ '+f2(dP)+' = '+f2(aE)},{h:'5 · What it means',p:aE>1?'Above 1: buyers react strongly, so a price cut wins enough sales to earn more.':'Below 1: buyers barely move, so a price cut throws money away, raise the price.',calc:'|E| = '+f2(aE)+(aE>1?' > 1':(aE<1?' < 1':' = 1'))}]}; },
     sync:function(self,v){ var dQ=(v.Q2-v.Q1)/((v.Q1+v.Q2)/2), dP=(v.P2-v.P1)/((v.P1+v.P2)/2); if(!isFinite(dQ/dP)||dP===0){ self.st.Q=50; return; } var aE=Math.abs(dQ/dP); self.st.Q=self.clamp(self.ch.A/(self.ch.B*(aE+1)),2,98); }
   }
 },
 
-/* 03 — CONSUMER CHOICE */
+/* 03, CONSUMER CHOICE */
 {
   key:'consumer', icon:'🛒', sbTitle:'Find your best buy',
-  QMAX:50, PMAX:50, xlabel:'Good X — units', ylabel:'Good Y — units', A:0.5, init:{ pX:4, pY:4, M:120 },
+  QMAX:50, PMAX:50, xlabel:'Good X (units)', ylabel:'Good Y (units)', A:0.5, init:{ pX:4, pY:4, M:120 },
   legend:[{c:C.sup,t:'Budget line'},{c:C.amb,t:'Equally-happy curves'},{c:C.dem,t:'Best buy',dot:true}],
   chipA:{id:'x_xs',label:'BEST X'}, chipB:{id:'x_ys',label:'BEST Y'}, footer:{id:'x_u',label:'Happiness'},
   metricLabels:['Best X','Best Y'],
@@ -276,19 +276,19 @@ var CHAPTERS = [
   },
   drag:function(self){ return {hit:function(c){ return (Math.abs(self.st.pX*c.q+self.st.pY*c.p-self.st.M)<6 && c.q>=0 && c.p>=0)?'budget':false; }, move:function(h,c){ self.st.M=self.clamp(self.st.pX*c.q+self.st.pY*c.p,20,320); return 'Budget changes'; }}; },
   problem:{
-    intro:'The number <b>a</b> is the slice of your money you put on X (so <b>1−a</b> goes on Y). Pick a scenario or change any number — your best buy and the graph update.',
+    intro:'The number <b>a</b> is the slice of your money you put on X (so <b>1−a</b> goes on Y). Pick a scenario or change any number, your best buy and the graph update.',
     keyHtml:'<b style="color:#2B2622">Big idea:</b> your best buy sits where the budget line just touches the happiest curve you can reach. The shortcut: put a fixed slice of your money on each thing.',
     inputs:[{key:'M',label:'Money to spend ($)',value:120,step:5},{key:'pX',label:'Price of X ($)',value:4,step:1},{key:'pY',label:'Price of Y ($)',value:4,step:1},{key:'a',label:'Slice on X (a)',value:0.5,step:0.05}],
     presets:[{name:'Equal split',values:{M:120,pX:4,pY:4,a:0.5}},{name:'X on sale',values:{M:120,pX:2,pY:4,a:0.5}},{name:'X expensive',values:{M:120,pX:8,pY:4,a:0.5}},{name:'Big budget',values:{M:200,pX:4,pY:4,a:0.5}},{name:'X-lover',values:{M:120,pX:4,pY:4,a:0.7}}],
     solve:function(v){ var M=v.M,pX=v.pX,pY=v.pY,a=v.a; if(pX<=0||pY<=0) return {answer:'Prices have to be above zero. Set both prices above 0.',steps:[]};
       var X=(a*M)/pX, Y=((1-a)*M)/pY, U=Math.pow(X,a)*Math.pow(Y,1-a);
       return {answer:'Your best buy: <b>'+f2(X)+' of X and '+f2(Y)+' of Y</b> (happiness '+f2(U)+').',
-        steps:[{h:'1 · Lay out the facts',p:'What you can afford and what you like.',calc:'Money:  '+f2(pX)+'·X + '+f2(pY)+'·Y = '+f2(M)+'\nTaste:  U = X^'+f2(a)+' · Y^'+f2(1-a)},{h:'2 · The simple rule',p:'Put a fixed slice of your money on each thing — slice a on X, the rest on Y.',calc:'slice on X = '+f2(a)+'\nslice on Y = '+f2(1-a)},{h:'3 · How much X',p:'Slice of money for X, divided by the price of X.',calc:'X = '+f2(a)+'·'+f2(M)+' / '+f2(pX)+' = '+f2(X)},{h:'4 · How much Y',p:'Same with the leftover slice and the price of Y.',calc:'Y = '+f2(1-a)+'·'+f2(M)+' / '+f2(pY)+' = '+f2(Y)},{h:'5 · What it tells you',p:'When X costs more you buy less X. The two pots of spending add back to all your money.',calc:'spend on X = $'+f2(a*M)+'\nspend on Y = $'+f2((1-a)*M)}]}; },
+        steps:[{h:'1 · Lay out the facts',p:'What you can afford and what you like.',calc:'Money:  '+f2(pX)+'·X + '+f2(pY)+'·Y = '+f2(M)+'\nTaste:  U = X^'+f2(a)+' · Y^'+f2(1-a)},{h:'2 · The simple rule',p:'Put a fixed slice of your money on each thing, slice a on X, the rest on Y.',calc:'slice on X = '+f2(a)+'\nslice on Y = '+f2(1-a)},{h:'3 · How much X',p:'Slice of money for X, divided by the price of X.',calc:'X = '+f2(a)+'·'+f2(M)+' / '+f2(pX)+' = '+f2(X)},{h:'4 · How much Y',p:'Same with the leftover slice and the price of Y.',calc:'Y = '+f2(1-a)+'·'+f2(M)+' / '+f2(pY)+' = '+f2(Y)},{h:'5 · What it tells you',p:'When X costs more you buy less X. The two pots of spending add back to all your money.',calc:'spend on X = $'+f2(a*M)+'\nspend on Y = $'+f2((1-a)*M)}]}; },
     sync:function(self,v){ self.st.M=v.M; self.st.pX=v.pX; self.st.pY=v.pY; self.ch.A=v.a; }
   }
 },
 
-/* 04 — COSTS */
+/* 04, COSTS */
 {
   key:'costs', icon:'🥖', sbTitle:'Where does the money go?',
   QMAX:100, PMAX:120, xlabel:'Loaves made', ylabel:'Cost per loaf ($)', F:400, ca:12, cb:0.9, cc:0.03, init:{ hl:40 },
@@ -325,19 +325,19 @@ var CHAPTERS = [
   },
   drag:function(self){ return {hit:function(c){return 'q';}, move:function(h,c){ self.st.hl=self.clamp(c.q,3,self.P.QMAX-2); return 'Scrub loaves'; }}; },
   problem:{
-    intro:'Pick how much you make and watch the cost of one loaf split into its parts — and see which way the next loaf is pushing your average.',
-    keyHtml:'<b style="color:#2B2622">Big idea:</b> a typical loaf costs the shared fixed cost plus the shared variable cost. Cheaper-than-average next loaf pulls it down, pricier pushes it up — they meet at the cheapest point.',
+    intro:'Pick how much you make and watch the cost of one loaf split into its parts, and see which way the next loaf is pushing your average.',
+    keyHtml:'<b style="color:#2B2622">Big idea:</b> a typical loaf costs the shared fixed cost plus the shared variable cost. Cheaper-than-average next loaf pulls it down, pricier pushes it up, they meet at the cheapest point.',
     inputs:[{key:'FC',label:'Fixed cost (FC)',value:600,step:10},{key:'Q',label:'Output (Q)',value:40,step:1},{key:'VC',label:'Variable cost at Q',value:520,step:10},{key:'Qp',label:'Previous output',value:30,step:1},{key:'VCp',label:'Variable cost at Qₚ',value:340,step:10}],
     presets:[{name:'Bakery',values:{FC:600,Q:40,VC:520,Qp:30,VCp:340}},{name:'Workshop',values:{FC:1000,Q:50,VC:900,Qp:40,VCp:640}},{name:'Food truck',values:{FC:300,Q:20,VC:260,Qp:10,VCp:110}},{name:'Factory',values:{FC:2000,Q:100,VC:3000,Qp:80,VCp:2100}}],
     solve:function(v){ var FC=v.FC,Q=v.Q,VC=v.VC,Qp=v.Qp,VCp=v.VCp; if(Q<=0||Q===Qp) return {answer:'Bake at least one loaf, and a different amount than last time.',steps:[]};
       var TC=FC+VC, AFC=FC/Q, AVC=VC/Q, ATC=TC/Q, MC=(VC-VCp)/(Q-Qp);
-      return {answer:'Making '+f2(Q)+' loaves: a typical loaf costs <b>$'+f2(ATC)+'</b>, the next loaf costs <b>$'+f2(MC)+'</b> — so the average is '+(MC<ATC?'still <b>falling</b>':'<b>rising</b>')+'.',
-        steps:[{h:'1 · Split your costs',p:'Fixed cost (rent, ovens) stays the same. Variable cost (flour, power) grows. Add them.',calc:'Fixed = $'+f2(FC)+'\nVariable = $'+f2(VC)+'\nTotal = $'+f2(TC)},{h:'2 · Share the fixed cost',p:'Spread the rent over every loaf — always shrinks as you bake more.',calc:'fixed per loaf = '+f2(FC)+' / '+f2(Q)+' = $'+f2(AFC)},{h:'3 · A typical loaf',p:'Share the variable cost too, then add.',calc:'variable per loaf = $'+f2(AVC)+'\ntypical loaf = $'+f2(ATC)},{h:'4 · One more loaf',p:'Rent does not change, so only the extra flour counts.',calc:'next loaf = ('+f2(VC)+' − '+f2(VCp)+') / ('+f2(Q)+' − '+f2(Qp)+') = $'+f2(MC)},{h:'5 · What it tells you',p:MC<ATC?'The next loaf is cheaper than a typical one, so baking more still lowers your average.':'The next loaf is pricier than a typical one, so baking more now raises your average.',calc:'next $'+f2(MC)+(MC<ATC?' < ':' > ')+'typical $'+f2(ATC)}]}; },
+      return {answer:'Making '+f2(Q)+' loaves: a typical loaf costs <b>$'+f2(ATC)+'</b>, the next loaf costs <b>$'+f2(MC)+'</b>, so the average is '+(MC<ATC?'still <b>falling</b>':'<b>rising</b>')+'.',
+        steps:[{h:'1 · Split your costs',p:'Fixed cost (rent, ovens) stays the same. Variable cost (flour, power) grows. Add them.',calc:'Fixed = $'+f2(FC)+'\nVariable = $'+f2(VC)+'\nTotal = $'+f2(TC)},{h:'2 · Share the fixed cost',p:'Spread the rent over every loaf, always shrinks as you bake more.',calc:'fixed per loaf = '+f2(FC)+' / '+f2(Q)+' = $'+f2(AFC)},{h:'3 · A typical loaf',p:'Share the variable cost too, then add.',calc:'variable per loaf = $'+f2(AVC)+'\ntypical loaf = $'+f2(ATC)},{h:'4 · One more loaf',p:'Rent does not change, so only the extra flour counts.',calc:'next loaf = ('+f2(VC)+' − '+f2(VCp)+') / ('+f2(Q)+' − '+f2(Qp)+') = $'+f2(MC)},{h:'5 · What it tells you',p:MC<ATC?'The next loaf is cheaper than a typical one, so baking more still lowers your average.':'The next loaf is pricier than a typical one, so baking more now raises your average.',calc:'next $'+f2(MC)+(MC<ATC?' < ':' > ')+'typical $'+f2(ATC)}]}; },
     sync:function(self,v){ self.st.hl=self.clamp(v.Q,3,self.P.QMAX-2); }
   }
 },
 
-/* 05 — PROFIT MAX */
+/* 05, PROFIT MAX */
 {
   key:'profit', icon:'💰', sbTitle:"Work out the stall's profit",
   QMAX:100, PMAX:120, xlabel:'Cases made', ylabel:'$ per case', pa:12, pb:0.9, pc:0.03, F:400, init:{ price:60 },
@@ -349,9 +349,9 @@ var CHAPTERS = [
   MC:function(q){ return this.pa-2*this.pb*q+3*this.pc*q*q; }, AVC:function(q){ return this.pa-this.pb*q+this.pc*q*q; }, ATC:function(q){ return this.F/q+this.AVC(q); },
   qStar:function(price){ var best=1; for(var q=3;q<this.QMAX;q+=0.1){ if(this.MC(q)<=price) best=q; } return best; },
   scenarios:[
-    {id:'cheap',label:'Cheap',cause:'Cheap price',target:function(){return {price:30};},msg:"<b>Cheap price.</b> Below the average cost — the stall makes a <span style='color:#C0492B;font-weight:700'>loss</span>, but makes the number that keeps the loss smallest."},
+    {id:'cheap',label:'Cheap',cause:'Cheap price',target:function(){return {price:30};},msg:"<b>Cheap price.</b> Below the average cost, the stall makes a <span style='color:#C0492B;font-weight:700'>loss</span>, but makes the number that keeps the loss smallest."},
     {id:'even',label:'Break-even',cause:'Break-even',target:function(){return {price:45};},msg:"<b>Almost breaking even.</b> The price is barely covering the average cost; profit is close to zero."},
-    {id:'good',label:'Good',cause:'Good price',target:function(){return {price:70};},msg:"<b>Good price.</b> Well above the average cost — a healthy green <span style='color:#1E7468;font-weight:700'>profit</span> box."},
+    {id:'good',label:'Good',cause:'Good price',target:function(){return {price:70};},msg:"<b>Good price.</b> Well above the average cost, a healthy green <span style='color:#1E7468;font-weight:700'>profit</span> box."},
     {id:'boom',label:'Boom',cause:'Boom price',target:function(){return {price:95};},msg:"<b>Great price.</b> A big gap over the average cost, so the stall makes even more cases."},
   ],
   play:['cheap','even','good','boom'],
@@ -373,19 +373,19 @@ var CHAPTERS = [
   },
   drag:function(self){ return {hit:function(c){ return Math.abs(c.p-self.st.price)<6?'price':false; }, move:function(h,c){ self.st.price=self.clamp(Math.round(c.p),20,110); return 'Price moves'; }}; },
   problem:{
-    intro:'The stall makes cases up to where one more would cost more than it sells for. Type the price, the costs, and how many it makes — watch profit flip, and find when to close.',
+    intro:'The stall makes cases up to where one more would cost more than it sells for. Type the price, the costs, and how many it makes, watch profit flip, and find when to close.',
     keyHtml:'<b style="color:#2B2622">Big idea:</b> make cases until one more costs more than it sells for. Profit = (price − average cost) × cases. If the price can’t cover the make-each-case cost, close.',
     inputs:[{key:'P',label:'Going price per case ($)',value:30,step:1},{key:'ATC',label:'Average total cost ($)',value:22,step:1},{key:'q',label:'Cases made',value:80,step:1},{key:'AVC',label:'Make-each-case cost ($)',value:14,step:1}],
     presets:[{name:'Good money',values:{P:30,ATC:22,q:80,AVC:14}},{name:'Break-even',values:{P:22,ATC:22,q:80,AVC:14}},{name:'Loss, stay open',values:{P:18,ATC:22,q:70,AVC:14}},{name:'Close up',values:{P:12,ATC:22,q:60,AVC:14}}],
     solve:function(v){ var P=v.P,ATC=v.ATC,q=v.q,AVC=v.AVC; if(q<=0) return {answer:'The stall has to make at least one case.',steps:[]};
       var TR=P*q, TC=ATC*q, profit=(P-ATC)*q, dec=P<AVC?'<b>close for the day</b> (price too low to cover making each case)':(P<ATC?'stay open, but it’s a loss':'making money');
-      return {scenario:'Going price $'+f2(P)+', average cost $'+f2(ATC)+', make-each-case $'+f2(AVC)+', '+f2(q)+' cases.',answer:'Profit = <b>'+(profit>=0?'+':'−')+'$'+f2(Math.abs(profit))+'</b> — '+dec+'.',
+      return {scenario:'Going price $'+f2(P)+', average cost $'+f2(ATC)+', make-each-case $'+f2(AVC)+', '+f2(q)+' cases.',answer:'Profit = <b>'+(profit>=0?'+':'−')+'$'+f2(Math.abs(profit))+'</b>, '+dec+'.',
         steps:[{h:'1 · How many to make',p:'Keep making while one more case sells for more than it costs.',calc:'price $'+f2(P)+'  →  make '+f2(q)+' cases'},{h:'2 · Money coming in',p:'Price times how many sold.',calc:'money in = '+f2(P)+' × '+f2(q)+' = $'+f2(TR)},{h:'3 · Money going out',p:'Average cost times how many made.',calc:'money out = '+f2(ATC)+' × '+f2(q)+' = $'+f2(TC)},{h:'4 · Profit',p:'Money in minus money out.',calc:'profit = '+f2(TR)+' − '+f2(TC)+' = $'+f2(profit)},{h:'5 · Stay open or close?',p:'As long as the price covers the make-each-case cost, selling beats sitting idle. If not, close.',calc:'price $'+f2(P)+' vs make-each-case $'+f2(AVC)+'  →  '+dec}]}; },
     sync:function(self,v){ self.st.price=self.clamp(Math.round(v.P),20,110); }
   }
 },
 
-/* 06 — MONOPOLY */
+/* 06, MONOPOLY */
 {
   key:'monopoly', icon:'🏛️', sbTitle:"The only seller's price",
   QMAX:100, PMAX:100, xlabel:'Quantity', ylabel:'Price ($)', init:{ a:100, b:1, mc:20, showDWL:false },
@@ -397,11 +397,11 @@ var CHAPTERS = [
   tune:true, tip:'Tip: drag the green cost (MC) line up and down in the chart.',
   scenarios:[
     {id:'step1',label:'1 · Pick amount',cause:'Pick the amount',toggle:function(self){},msg:"<b>Step 1.</b> The seller finds where the <b>extra-money line (MR)</b> crosses the <b>cost line (MC)</b>. That sets how many to make. MR sits below the price line because selling one more means cutting the price for everyone."},
-    {id:'step2',label:'2 · Set price',cause:'Set the price',toggle:function(self){},msg:"<b>Step 2.</b> With the amount fixed, the seller charges the most buyers will pay — read straight up to the <b>demand line</b>. The price lands <span style='color:#1E7468;font-weight:700'>well above the cost</span>; that gap is the markup."},
-    {id:'dwl',label:'Lost trades',cause:'Lost trades',toggle:function(self){self.st.showDWL=true;},msg:"<b>What everyone loses.</b> Between the seller's amount and a fair market's, plenty of buyers would gladly pay more than it costs to make — but those sales never happen. The pink triangle is the <b>deadweight loss</b>."},
+    {id:'step2',label:'2 · Set price',cause:'Set the price',toggle:function(self){},msg:"<b>Step 2.</b> With the amount fixed, the seller charges the most buyers will pay, read straight up to the <b>demand line</b>. The price lands <span style='color:#1E7468;font-weight:700'>well above the cost</span>; that gap is the markup."},
+    {id:'dwl',label:'Lost trades',cause:'Lost trades',toggle:function(self){self.st.showDWL=true;},msg:"<b>What everyone loses.</b> Between the seller's amount and a fair market's, plenty of buyers would gladly pay more than it costs to make, but those sales never happen. The pink triangle is the <b>deadweight loss</b>."},
   ],
   play:['step1','step2','dwl'],
-  reset:{toggle:function(self){self.st.showDWL=false;},cause:'Reset',msg:'A market with many sellers would land at the green dot, where price equals cost — no good trades go missing.'},
+  reset:{toggle:function(self){self.st.showDWL=false;},cause:'Reset',msg:'A market with many sellers would land at the green dot, where price equals cost, no good trades go missing.'},
   metrics:function(self,s){ var Qm=(s.a-s.mc)/(2*s.b); return [s.a-s.b*Qm, Qm]; },
   anchor:function(self,s){ var Qm=(s.a-s.mc)/(2*s.b); return {q:Qm,p:s.a-s.b*Qm}; },
   draw:function(self,s){
@@ -420,19 +420,19 @@ var CHAPTERS = [
   },
   drag:function(self){ return {hit:function(c){ return Math.abs(c.p-self.st.mc)<6?'mc':false; }, move:function(h,c){ self.st.mc=self.clamp(Math.round(c.p),0,80); return 'Cost changes'; }}; },
   problem:{
-    intro:'Pick a real example or type your own — change the top price buyers would pay, how fast buyers drop off, or the cost to make one. The answer and the graph update as you go.',
-    keyHtml:'<b style="color:#2B2622">Big idea:</b> the extra-money line (MR) falls twice as steeply as price. Find where it meets the cost line for the amount, read the price off demand. The price always beats the cost — that gap is the markup.',
+    intro:'Pick a real example or type your own, change the top price buyers would pay, how fast buyers drop off, or the cost to make one. The answer and the graph update as you go.',
+    keyHtml:'<b style="color:#2B2622">Big idea:</b> the extra-money line (MR) falls twice as steeply as price. Find where it meets the cost line for the amount, read the price off demand. The price always beats the cost, that gap is the markup.',
     inputs:[{key:'a',label:'Top price buyers pay <i>a</i>',value:100,step:1},{key:'b',label:'How fast buyers drop off <i>b</i>',value:1,step:0.1},{key:'mc',label:'Cost to make one',value:20,step:1}],
     presets:[{name:'Patented medicine',values:{a:120,b:1,mc:20}},{name:'Software',values:{a:100,b:1,mc:5}},{name:'Town cable',values:{a:80,b:0.5,mc:15}},{name:'Buyers leave fast',values:{a:140,b:4,mc:30}}],
-    solve:function(v){ var a=v.a,b=v.b,mc=v.mc; if(a<=mc||b<=0) return {answer:'No way to make money here — the cost is as high as the top price anyone would pay. The seller doesn’t open.',steps:[]};
+    solve:function(v){ var a=v.a,b=v.b,mc=v.mc; if(a<=mc||b<=0) return {answer:'No way to make money here, the cost is as high as the top price anyone would pay. The seller doesn’t open.',steps:[]};
       var Q=(a-mc)/(2*b),P=a-b*Q,Lr=(P-mc)/P,Qc=(a-mc)/b;
       return {scenario:'Demand P = '+f2(a)+' − '+f2(b)+'Q, cost $'+f2(mc)+' per unit.',answer:'It makes <b>'+f2(Q)+' units</b>, charges <b>$'+f2(P)+'</b>, a markup of '+f2(Lr*100)+'% above cost.',
-        steps:[{h:'1 · Demand and the extra-money line',p:'Demand is P = a − bQ. The extra money from one more (MR) starts at the same top price but falls twice as steeply.',calc:'Demand: P = '+f2(a)+' − '+f2(b)+'Q\nMR:     '+f2(a)+' − '+f2(2*b)+'Q'},{h:'2 · Match extra money to extra cost',p:'Best amount is where extra money equals extra cost.',calc:f2(a)+' − '+f2(2*b)+'Q = '+f2(mc)+'\nQ = '+f2(Q)},{h:'3 · Read the price off demand',p:'Put that amount into the demand line (not MR).',calc:'P = '+f2(a)+' − '+f2(b)+'('+f2(Q)+') = $'+f2(P)},{h:'4 · Measure the markup',p:'How far the price sits above cost, as a slice of price.',calc:'markup = ('+f2(P)+' − '+f2(mc)+')/'+f2(P)+' = '+f2(Lr)},{h:'5 · What it means',p:'Price always beats cost, so the seller makes too few — '+f2(Q)+' instead of '+f2(Qc)+'. The missing sales are the lost value.',calc:'made '+f2(Q)+', fair-market '+f2(Qc)+', markup '+f2(Lr*100)+'%'}]}; },
+        steps:[{h:'1 · Demand and the extra-money line',p:'Demand is P = a − bQ. The extra money from one more (MR) starts at the same top price but falls twice as steeply.',calc:'Demand: P = '+f2(a)+' − '+f2(b)+'Q\nMR:     '+f2(a)+' − '+f2(2*b)+'Q'},{h:'2 · Match extra money to extra cost',p:'Best amount is where extra money equals extra cost.',calc:f2(a)+' − '+f2(2*b)+'Q = '+f2(mc)+'\nQ = '+f2(Q)},{h:'3 · Read the price off demand',p:'Put that amount into the demand line (not MR).',calc:'P = '+f2(a)+' − '+f2(b)+'('+f2(Q)+') = $'+f2(P)},{h:'4 · Measure the markup',p:'How far the price sits above cost, as a slice of price.',calc:'markup = ('+f2(P)+' − '+f2(mc)+')/'+f2(P)+' = '+f2(Lr)},{h:'5 · What it means',p:'Price always beats cost, so the seller makes too few, '+f2(Q)+' instead of '+f2(Qc)+'. The missing sales are the lost value.',calc:'made '+f2(Q)+', fair-market '+f2(Qc)+', markup '+f2(Lr*100)+'%'}]}; },
     sync:function(self,v){ self.st.a=v.a; self.st.b=Math.max(0.1,v.b); self.st.mc=v.mc; }
   }
 },
 
-/* 07 — GAME THEORY (custom matrix) */
+/* 07, GAME THEORY (custom matrix) */
 {
   key:'game', icon:'🎯', sbTitle:"Prisoner's dilemma", custom:true, viewBox:'0 0 520 420',
   init:{ CC:[8,8], CD:[2,10], DC:[10,2], DD:[4,4], opts:{} },
@@ -440,10 +440,10 @@ var CHAPTERS = [
   chipA:{id:'gt_nash',label:'WHERE THEY END UP'}, chipB:{id:'gt_eff',label:'BEST FOR BOTH'}, footer:null, metricLabels:null,
   sliders:null, tune:false, tip:null,
   scenarios:[
-    {id:'b1',label:"Shop 1's move",cause:'',toggle:function(self){self.st.opts={best1:true};},msg:"Put yourself in Shop 1's shoes. Whatever Shop 2 does, cutting earns more (10 beats 8, and 4 beats 2). When one choice wins no matter what, it's a <b>dominant strategy</b> — and cutting is Shop 1's."},
-    {id:'b2',label:"Shop 2's move",cause:'',toggle:function(self){self.st.opts={best1:true,best2:true};},msg:"Shop 2 is in the same spot — the game is a mirror image. Cutting is the dominant strategy for both shops, so each decides to cut."},
-    {id:'nash',label:'Where they end up',cause:'',toggle:function(self){self.st.opts={best1:true,best2:true,nash:true};},msg:"Both cut, landing in the bottom-right cell <b>(Cut, Cut)</b> — the <b>Nash equilibrium</b>, where neither shop can do better by switching alone. But each earns just <b>4</b>."},
-    {id:'pareto',label:'What they missed',cause:'',toggle:function(self){self.st.opts={nash:true,pareto:true};},msg:"If both had simply <b>Held</b>, each would earn <b>8</b> — <span style='color:#1E7468;font-weight:700'>double</span> the price-war payoff. But each is tempted to grab 10, so without a trustworthy promise they're stuck. That's the <b>prisoner's dilemma</b>."},
+    {id:'b1',label:"Shop 1's move",cause:'',toggle:function(self){self.st.opts={best1:true};},msg:"Put yourself in Shop 1's shoes. Whatever Shop 2 does, cutting earns more (10 beats 8, and 4 beats 2). When one choice wins no matter what, it's a <b>dominant strategy</b>, and cutting is Shop 1's."},
+    {id:'b2',label:"Shop 2's move",cause:'',toggle:function(self){self.st.opts={best1:true,best2:true};},msg:"Shop 2 is in the same spot, the game is a mirror image. Cutting is the dominant strategy for both shops, so each decides to cut."},
+    {id:'nash',label:'Where they end up',cause:'',toggle:function(self){self.st.opts={best1:true,best2:true,nash:true};},msg:"Both cut, landing in the bottom-right cell <b>(Cut, Cut)</b>, the <b>Nash equilibrium</b>, where neither shop can do better by switching alone. But each earns just <b>4</b>."},
+    {id:'pareto',label:'What they missed',cause:'',toggle:function(self){self.st.opts={nash:true,pareto:true};},msg:"If both had simply <b>Held</b>, each would earn <b>8</b>, <span style='color:#1E7468;font-weight:700'>double</span> the price-war payoff. But each is tempted to grab 10, so without a trustworthy promise they're stuck. That's the <b>prisoner's dilemma</b>."},
   ],
   play:['b1','b2','nash','pareto'],
   reset:{toggle:function(self){self.st.opts={};},cause:'',msg:'Cleared. Step through the buttons to see why two sensible shops end up in a price war neither wanted.'},
@@ -468,26 +468,26 @@ var CHAPTERS = [
     }
     if(opts.nash){ var nt=el('text',{x:ox+cw+cw/2-4,y:oy+ch+ch/2+40,fill:C.pink,'font-size':13,'font-weight':800,'text-anchor':'middle'}); nt.textContent='NASH'; L.appendChild(nt); }
     if(opts.pareto){ var pt=el('text',{x:ox+cw/2,y:oy+ch/2+42,fill:'#B07A12','font-size':12,'font-weight':800,'text-anchor':'middle'}); pt.textContent='BEST FOR BOTH'; L.appendChild(pt); }
-    var fn=el('text',{x:270,y:406,fill:C.mut,'font-size':12,'text-anchor':'middle'}); fn.textContent='Each cell: (Shop 1 profit, Shop 2 profit) — higher is better.'; L.appendChild(fn);
+    var fn=el('text',{x:270,y:406,fill:C.mut,'font-size':12,'text-anchor':'middle'}); fn.textContent='Each cell: (Shop 1 profit, Shop 2 profit), higher is better.'; L.appendChild(fn);
     self.setT('gt_nash','(Cut, Cut)'); self.setT('gt_eff','(Hold, Hold)');
   },
   drag:function(){ return null; },
   problem:{
     intro:"Four numbers build the game: <b>T</b>emptation (cut while the rival holds), <b>R</b>eward (both hold), <b>P</b>unishment (both cut), <b>S</b>ucker (hold while the rival cuts). A real dilemma only appears when <b>T &gt; R &gt; P &gt; S</b>.",
-    keyHtml:"<b style=\"color:#2B2622\">Big idea:</b> a dominant strategy is best no matter what the other does. When both have one, the Nash equilibrium can be worse for everyone than cooperation — and <b>T &gt; R &gt; P &gt; S</b> is what makes it a dilemma.",
-    inputs:[{key:'T',label:'T — Temptation',value:10,step:1},{key:'R',label:'R — Reward (both hold)',value:8,step:1},{key:'P',label:'P — Punishment (both cut)',value:4,step:1},{key:'S',label:'S — Sucker',value:2,step:1}],
+    keyHtml:"<b style=\"color:#2B2622\">Big idea:</b> a dominant strategy is best no matter what the other does. When both have one, the Nash equilibrium can be worse for everyone than cooperation, and <b>T &gt; R &gt; P &gt; S</b> is what makes it a dilemma.",
+    inputs:[{key:'T',label:'T, Temptation',value:10,step:1},{key:'R',label:'R, Reward (both hold)',value:8,step:1},{key:'P',label:'P, Punishment (both cut)',value:4,step:1},{key:'S',label:'S, Sucker',value:2,step:1}],
     presets:[{name:'Classic dilemma',values:{T:10,R:8,P:4,S:2}},{name:'Price war',values:{T:12,R:9,P:5,S:1}},{name:'Stag hunt',values:{T:6,R:9,P:4,S:1}},{name:'Arms race',values:{T:11,R:7,P:3,S:0}}],
     solve:function(v){ var T=v.T,R=v.R,P=v.P,S=v.S, defectDom=(T>R)&&(P>S), coopDom=(R>T)&&(S>P), stagHunt=(R>T)&&(P>S), trueDil=(T>R)&&(R>P)&&(P>S), answer, dl;
       if(defectDom){ answer='<b>Cutting is the dominant strategy for both → they end up at (Cut, Cut) = ('+P+', '+P+').</b>'; dl=trueDil?'Because T > R > P > S holds, this IS a true prisoner’s dilemma: both end at '+P+' when holding would have paid '+R+'.':'Cutting dominates, but the strict order T > R > P > S doesn’t fully hold, so it isn’t the textbook dilemma.'; }
-      else if(stagHunt){ answer='<b>No dominant strategy — a coordination game with two resting points: (Hold, Hold) = ('+R+', '+R+') and (Cut, Cut) = ('+P+', '+P+').</b>'; dl='NOT a prisoner’s dilemma. Here R > T, so holding is the best reply to holding — the trap disappears.'; }
-      else if(coopDom){ answer='<b>Holding is the dominant strategy for both → (Hold, Hold) = ('+R+', '+R+').</b>'; dl='NOT a prisoner’s dilemma — cooperation simply wins.'; }
-      else { answer='<b>No single dominant strategy; the outcome depends on the mix of payoffs.</b>'; dl='NOT a clean prisoner’s dilemma — the order T > R > P > S isn’t satisfied.'; }
-      return {answer:answer,steps:[{h:'1 · The four situations',p:'Each shop picks Hold (C) or Cut (D). Boxes show (Shop 1, Shop 2).',calc:'(C,C) = ('+R+', '+R+')\n(C,D) = ('+S+', '+T+')\n(D,C) = ('+T+', '+S+')\n(D,D) = ('+P+', '+P+')'},{h:'2 · What should Shop 1 do?',p:'For each of Shop 2’s choices, compare holding vs cutting.',calc:'If Shop 2 holds: Cut '+T+' vs Hold '+R+' → '+(T>R?'Cut':T<R?'Hold':'tie')+'\nIf Shop 2 cuts:  Cut '+P+' vs Hold '+S+' → '+(P>S?'Cut':P<S?'Hold':'tie')},{h:'3 · A dominant strategy?',p:defectDom?'Cutting wins in both cases — a dominant strategy for both.':coopDom?'Holding wins in both cases — a dominant strategy for both.':'Neither wins both, so there’s no dominant strategy.',calc:defectDom?'T>R and P>S → Cut dominates':coopDom?'R>T and S>P → Hold dominates':'no single dominant strategy'},{h:'4 · Where they settle',p:'The outcome where neither wants to switch alone is the Nash equilibrium.',calc:defectDom?'Nash = (Cut, Cut) = ('+P+', '+P+')':stagHunt?'Two: (Hold,Hold)=('+R+','+R+') and (Cut,Cut)=('+P+','+P+')':coopDom?'Nash = (Hold, Hold) = ('+R+', '+R+')':'depends on the payoffs'},{h:'5 · Is it a dilemma?',p:'A true dilemma drags both to an outcome worse than cooperation — only when T > R > P > S.',calc:dl}]}; },
+      else if(stagHunt){ answer='<b>No dominant strategy, a coordination game with two resting points: (Hold, Hold) = ('+R+', '+R+') and (Cut, Cut) = ('+P+', '+P+').</b>'; dl='NOT a prisoner’s dilemma. Here R > T, so holding is the best reply to holding, the trap disappears.'; }
+      else if(coopDom){ answer='<b>Holding is the dominant strategy for both → (Hold, Hold) = ('+R+', '+R+').</b>'; dl='NOT a prisoner’s dilemma, cooperation simply wins.'; }
+      else { answer='<b>No single dominant strategy; the outcome depends on the mix of payoffs.</b>'; dl='NOT a clean prisoner’s dilemma, the order T > R > P > S isn’t satisfied.'; }
+      return {answer:answer,steps:[{h:'1 · The four situations',p:'Each shop picks Hold (C) or Cut (D). Boxes show (Shop 1, Shop 2).',calc:'(C,C) = ('+R+', '+R+')\n(C,D) = ('+S+', '+T+')\n(D,C) = ('+T+', '+S+')\n(D,D) = ('+P+', '+P+')'},{h:'2 · What should Shop 1 do?',p:'For each of Shop 2’s choices, compare holding vs cutting.',calc:'If Shop 2 holds: Cut '+T+' vs Hold '+R+' → '+(T>R?'Cut':T<R?'Hold':'tie')+'\nIf Shop 2 cuts:  Cut '+P+' vs Hold '+S+' → '+(P>S?'Cut':P<S?'Hold':'tie')},{h:'3 · A dominant strategy?',p:defectDom?'Cutting wins in both cases, a dominant strategy for both.':coopDom?'Holding wins in both cases, a dominant strategy for both.':'Neither wins both, so there’s no dominant strategy.',calc:defectDom?'T>R and P>S → Cut dominates':coopDom?'R>T and S>P → Hold dominates':'no single dominant strategy'},{h:'4 · Where they settle',p:'The outcome where neither wants to switch alone is the Nash equilibrium.',calc:defectDom?'Nash = (Cut, Cut) = ('+P+', '+P+')':stagHunt?'Two: (Hold,Hold)=('+R+','+R+') and (Cut,Cut)=('+P+','+P+')':coopDom?'Nash = (Hold, Hold) = ('+R+', '+R+')':'depends on the payoffs'},{h:'5 · Is it a dilemma?',p:'A true dilemma drags both to an outcome worse than cooperation, only when T > R > P > S.',calc:dl}]}; },
     sync:function(self,v){ self.st.CC=[v.R,v.R]; self.st.CD=[v.S,v.T]; self.st.DC=[v.T,v.S]; self.st.DD=[v.P,v.P]; }
   }
 },
 
-/* 08 — TAX INCIDENCE */
+/* 08, TAX INCIDENCE */
 {
   key:'tax', icon:'🧾', sbTitle:'Who pays the tax?',
   QMAX:100, PMAX:100, xlabel:'Quantity sold', ylabel:'Price ($)', init:{ a:100, c:10, t:20, b:1, d:1 },
@@ -499,7 +499,7 @@ var CHAPTERS = [
   tune:true, tip:'Tip: drag the gap open near the dots in the chart to change the tax.',
   scenarios:[
     {id:'inelD',label:'Buyers stuck',cause:'Buyers can’t quit',target:function(){return {b:2.5};},msg:"<b>Now buyers can't easily quit</b> (think cigarettes). So buyers take on <span style='color:#1E7468;font-weight:700'>more of the tax</span> and sellers <span style='color:#C0492B;font-weight:700'>less</span>. The side that can't walk away pays more."},
-    {id:'inelS',label:'Sellers stuck',cause:'Sellers can’t quit',target:function(){return {d:2.5};},msg:"<b>Now sellers can't easily stop.</b> To keep their sales they swallow more of the tax — <span style='color:#1E7468;font-weight:700'>sellers pay more</span>, buyers <span style='color:#C0492B;font-weight:700'>less</span>."},
+    {id:'inelS',label:'Sellers stuck',cause:'Sellers can’t quit',target:function(){return {d:2.5};},msg:"<b>Now sellers can't easily stop.</b> To keep their sales they swallow more of the tax, <span style='color:#1E7468;font-weight:700'>sellers pay more</span>, buyers <span style='color:#C0492B;font-weight:700'>less</span>."},
   ],
   play:['inelD'],
   reset:{target:{t:20,b:1,d:1},cause:'Even match',msg:'<b>Back to an even match.</b> When both sides can walk away just as easily, they split the tax 50/50.'},
@@ -523,20 +523,20 @@ var CHAPTERS = [
   drag:function(self){ return {hit:function(c){ var s=self.st, Qt=(s.a-s.c-s.t)/(s.b+s.d); return Math.abs(c.q-Qt)<8?'wedge':false; },
     move:function(h,c){ var s=self.st, Q0=(s.a-s.c)/(s.b+s.d), P0=s.a-s.b*Q0; s.t=self.clamp(Math.round(2*Math.abs(c.p-P0)),0,60); return 'Tax changes'; }}; },
   problem:{
-    intro:'Pick a real example — like a tax on cigarettes — or type your own. The two prices, the tax money, the lost sales and who pays more all update right away.',
-    keyHtml:'<b style="color:#2B2622">Big idea:</b> a tax splits one price into two — buyers pay more, sellers keep less, the gap is the tax. The side that can’t easily walk away pays more, and the missing sales are the lost value.',
-    inputs:[{key:'a',label:'a — demand intercept',value:100,step:1},{key:'b',label:'b — demand slope',value:1,step:0.1},{key:'c',label:'c — supply intercept',value:10,step:1},{key:'d',label:'d — supply slope',value:1,step:0.1},{key:'t',label:'t — tax per item',value:20,step:1}],
+    intro:'Pick a real example, like a tax on cigarettes, or type your own. The two prices, the tax money, the lost sales and who pays more all update right away.',
+    keyHtml:'<b style="color:#2B2622">Big idea:</b> a tax splits one price into two, buyers pay more, sellers keep less, the gap is the tax. The side that can’t easily walk away pays more, and the missing sales are the lost value.',
+    inputs:[{key:'a',label:'a, demand intercept',value:100,step:1},{key:'b',label:'b, demand slope',value:1,step:0.1},{key:'c',label:'c, supply intercept',value:10,step:1},{key:'d',label:'d, supply slope',value:1,step:0.1},{key:'t',label:'t, tax per item',value:20,step:1}],
     presets:[{name:'Even match',values:{a:100,b:1,c:10,d:1,t:20}},{name:'Cigarettes',values:{a:100,b:2.5,c:10,d:1,t:20}},{name:'Sellers stuck',values:{a:100,b:1,c:10,d:0.4,t:20}},{name:'Small tax',values:{a:100,b:1,c:10,d:1,t:8}},{name:'Heavy tax',values:{a:100,b:1,c:10,d:1,t:40}}],
     solve:function(v){ var a=v.a,b=v.b,c=v.c,d=v.d,t=v.t; if(a<=c||b+d<=0) return {answer:'Demand must start above supply (a > c) and slopes positive.',steps:[]};
       var Q0=(a-c)/(b+d),P0=a-b*Q0,Qt=(a-c-t)/(b+d); if(Qt<=0) return {answer:'That tax is so heavy no trades survive. Lower it.',steps:[]};
       var Pb=a-b*Qt,Ps=c+d*Qt,rev=t*Qt,DWL=0.5*t*(Q0-Qt),bs=(Pb-P0)/t,ss=(P0-Ps)/t;
       return {answer:'Buyers pay <b>$'+f2(Pb)+'</b>, sellers keep <b>$'+f2(Ps)+'</b>; tax money $'+f2(rev)+', lost value $'+f2(DWL)+'. Buyers bear '+f2(bs*100)+'%.',
-        steps:[{h:'1 · The price before any tax',p:'Where buyers and sellers agree with no tax.',calc:'Q0 = ('+a+' − '+c+') / ('+b+' + '+d+') = '+f2(Q0)+',  P0 = '+f2(P0)},{h:'2 · The tax splits the price',p:'Buyer price must beat seller price by exactly the tax.',calc:'(buyer) − (seller) = '+t},{h:'3 · Fewer items sell',p:'Solve for the new amount — it drops.',calc:'Qt = ('+a+' − '+c+' − '+t+') / ('+b+' + '+d+') = '+f2(Qt)},{h:'4 · Prices, money, waste',p:'Buyers pay the higher price; the government collects tax × items; lost sales are the pink triangle.',calc:'Pb = '+f2(Pb)+',  Ps = '+f2(Ps)+'\nmoney = '+f2(rev)+',  lost = '+f2(DWL)},{h:'5 · Who pays more?',p:'The side that can’t walk away pays more. Equal ease → 50/50.',calc:'buyers '+f2(bs*100)+'%,  sellers '+f2(ss*100)+'%\n'+(b===d?'→ 50/50 (b = d)':(b<d?'→ buyers pay more':'→ sellers pay more'))}]}; },
+        steps:[{h:'1 · The price before any tax',p:'Where buyers and sellers agree with no tax.',calc:'Q0 = ('+a+' − '+c+') / ('+b+' + '+d+') = '+f2(Q0)+',  P0 = '+f2(P0)},{h:'2 · The tax splits the price',p:'Buyer price must beat seller price by exactly the tax.',calc:'(buyer) − (seller) = '+t},{h:'3 · Fewer items sell',p:'Solve for the new amount, it drops.',calc:'Qt = ('+a+' − '+c+' − '+t+') / ('+b+' + '+d+') = '+f2(Qt)},{h:'4 · Prices, money, waste',p:'Buyers pay the higher price; the government collects tax × items; lost sales are the pink triangle.',calc:'Pb = '+f2(Pb)+',  Ps = '+f2(Ps)+'\nmoney = '+f2(rev)+',  lost = '+f2(DWL)},{h:'5 · Who pays more?',p:'The side that can’t walk away pays more. Equal ease → 50/50.',calc:'buyers '+f2(bs*100)+'%,  sellers '+f2(ss*100)+'%\n'+(b===d?'→ 50/50 (b = d)':(b<d?'→ buyers pay more':'→ sellers pay more'))}]}; },
     sync:function(self,v){ self.st.a=v.a; self.st.b=Math.max(0.1,v.b); self.st.c=v.c; self.st.d=Math.max(0.1,v.d); self.st.t=v.t; }
   }
 },
 
-/* 09 — PRICE CEILINGS & FLOORS */
+/* 09, PRICE CEILINGS & FLOORS */
 {
   key:'pricectrl', icon:'🏷️', sbTitle:'When a price rule binds',
   QMAX:100, PMAX:100, xlabel:'Quantity', ylabel:'Price ($)', cb:1, cd:1, init:{ a:100, c:10, mode:'free', ctrl:40 },
@@ -549,11 +549,11 @@ var CHAPTERS = [
   Q0:function(s){ return (s.a-s.c)/(this.cb+this.cd); }, P0:function(s){ return s.a-this.cb*this.Q0(s); },
   binds:function(s){ return (s.mode==='ceiling'&&s.ctrl<this.P0(s))||(s.mode==='floor'&&s.ctrl>this.P0(s)); },
   scenarios:[
-    {id:'ceil',label:'🏠 Ceiling',cause:'Ceiling',target:function(){return {mode:'ceiling',ctrl:40};},msg:"<b>A price ceiling</b> (a legal maximum, like rent control) set below the market price. More people want it than there is to go around — a <span style='color:#C0492B;font-weight:700'>shortage</span>."},
-    {id:'floor',label:'🌾 Floor',cause:'Floor',target:function(){return {mode:'floor',ctrl:70};},msg:"<b>A price floor</b> (a legal minimum, like a minimum wage) set above the market price. Sellers offer more than buyers want — a <span style='color:#1E7468;font-weight:700'>surplus</span>."},
+    {id:'ceil',label:'🏠 Ceiling',cause:'Ceiling',target:function(){return {mode:'ceiling',ctrl:40};},msg:"<b>A price ceiling</b> (a legal maximum, like rent control) set below the market price. More people want it than there is to go around, a <span style='color:#C0492B;font-weight:700'>shortage</span>."},
+    {id:'floor',label:'🌾 Floor',cause:'Floor',target:function(){return {mode:'floor',ctrl:70};},msg:"<b>A price floor</b> (a legal minimum, like a minimum wage) set above the market price. Sellers offer more than buyers want, a <span style='color:#1E7468;font-weight:700'>surplus</span>."},
   ],
   play:['ceil','floor'],
-  reset:{target:{mode:'free',ctrl:40},cause:'Free market',msg:'<b>Free market.</b> With no rule, the price settles where buyers want exactly what sellers offer — no shortage, no surplus.'},
+  reset:{target:{mode:'free',ctrl:40},cause:'Free market',msg:'<b>Free market.</b> With no rule, the price settles where buyers want exactly what sellers offer, no shortage, no surplus.'},
   metrics:function(self,s){ if(!this.binds(s)){ var q=this.Q0(s); return [q,q]; } return [(s.a-s.ctrl)/this.cb,(s.ctrl-s.c)/this.cd]; },
   anchor:function(self,s){ if(!this.binds(s)) return {q:this.Q0(s),p:this.P0(s)}; var Qd=(s.a-s.ctrl)/this.cb, Qs=(s.ctrl-s.c)/this.cd; return {q:(Qd+Qs)/2,p:s.ctrl}; },
   draw:function(self,s){
@@ -575,25 +575,25 @@ var CHAPTERS = [
     } else if(s.mode!=='free'){ L.appendChild(el('line',{x1:P.x(0),y1:P.y(s.ctrl),x2:P.x(P.QMAX),y2:P.y(s.ctrl),stroke:C.amb,'stroke-width':2,'stroke-dasharray':'3 6',opacity:0.5})); }
     L.appendChild(el('circle',{cx:P.x(q0),cy:P.y(p0),r:6,fill:C.amb,stroke:'#fff','stroke-width':2.5}));
     self.setT('pc_qd',Qd.toFixed(1)); self.setT('pc_qs',Qs.toFixed(1));
-    self.setT('pc_gap',this.binds(s)?(gap.toFixed(1)+(s.mode==='floor'?' surplus':' short')):'—'); self.setT('pc_dwl',this.binds(s)?'$'+dwl.toFixed(0):'$0');
+    self.setT('pc_gap',this.binds(s)?(gap.toFixed(1)+(s.mode==='floor'?' surplus':' short')):'none'); self.setT('pc_dwl',this.binds(s)?'$'+dwl.toFixed(0):'$0');
   },
   drag:function(self){ return {hit:function(c){ return (self.st.mode!=='free'&&Math.abs(c.p-self.st.ctrl)<6)?'ctrl':false; }, move:function(h,c){ self.st.ctrl=self.clamp(Math.round(c.p),20,90); return self.st.mode==='ceiling'?'Ceiling moves':'Floor moves'; }}; },
   problem:{
-    intro:'A ceiling is a legal maximum price; a floor is a legal minimum. Pick a scenario or type your own — see when the rule bites and how big the shortage or surplus is.',
+    intro:'A ceiling is a legal maximum price; a floor is a legal minimum. Pick a scenario or type your own, see when the rule bites and how big the shortage or surplus is.',
     keyHtml:'<b style="color:#2B2622">Big idea:</b> a binding ceiling (below the market price) makes a shortage; a binding floor (above) makes a surplus. The short side sets how much trades, and the missing trades are lost value.',
-    inputs:[{key:'a',label:'a — demand intercept',value:100,step:1},{key:'b',label:'b — demand slope',value:1,step:0.1},{key:'c',label:'c — supply intercept',value:10,step:1},{key:'d',label:'d — supply slope',value:1,step:0.1},{key:'ctrl',label:'rule price',value:40,step:1}],
+    inputs:[{key:'a',label:'a, demand intercept',value:100,step:1},{key:'b',label:'b, demand slope',value:1,step:0.1},{key:'c',label:'c, supply intercept',value:10,step:1},{key:'d',label:'d, supply slope',value:1,step:0.1},{key:'ctrl',label:'rule price',value:40,step:1}],
     presets:[{name:'Rent control',values:{a:100,b:1,c:10,d:1,ctrl:40}},{name:'Minimum wage',values:{a:100,b:1,c:10,d:1,ctrl:70}},{name:'Non-binding',values:{a:100,b:1,c:10,d:1,ctrl:80}},{name:'Harsh cap',values:{a:100,b:1,c:10,d:1,ctrl:25}}],
     solve:function(v){ var a=v.a,b=v.b,c=v.c,d=v.d,ctrl=v.ctrl; if(b<=0||d<=0) return {answer:'Slopes must be positive.',steps:[]};
       var Q0=(a-c)/(b+d),P0=a-b*Q0,Qd=(a-ctrl)/b,Qs=(ctrl-c)/d,traded=Math.min(Qd,Qs), kind=Math.abs(ctrl-P0)<1e-6?'non-binding':(ctrl<P0?'ceiling':'floor');
       var dP=a-b*traded, sP=c+d*traded, DWL=kind==='non-binding'?0:0.5*(Q0-traded)*(dP-sP);
-      var msg=kind==='non-binding'?'The rule doesn’t bite — the market price already obeys it.':(kind==='ceiling'?'A ceiling below the market price → a shortage of <b>'+f2(Qd-Qs)+'</b>; only '+f2(traded)+' trade.':'A floor above the market price → a surplus of <b>'+f2(Qs-Qd)+'</b>; only '+f2(traded)+' trade.');
+      var msg=kind==='non-binding'?'The rule doesn’t bite, the market price already obeys it.':(kind==='ceiling'?'A ceiling below the market price → a shortage of <b>'+f2(Qd-Qs)+'</b>; only '+f2(traded)+' trade.':'A floor above the market price → a surplus of <b>'+f2(Qs-Qd)+'</b>; only '+f2(traded)+' trade.');
       return {answer:msg+(kind!=='non-binding'?' Lost value $'+f2(DWL)+'.':''),
         steps:[{h:'1 · The free-market price',p:'Where buyers want exactly what sellers offer.',calc:'Q0 = '+f2(Q0)+',  P0 = '+f2(P0)},{h:'2 · Does the rule bite?',p:'A ceiling bites below P0; a floor bites above P0.',calc:'rule $'+f2(ctrl)+' vs market $'+f2(P0)+'  →  '+kind},{h:'3 · How much buyers want',p:'At the rule price, read the demand line.',calc:'Qd = ('+a+' − '+ctrl+')/'+b+' = '+f2(Qd)},{h:'4 · How much sellers offer',p:'At the rule price, read the supply line.',calc:'Qs = ('+ctrl+' − '+c+')/'+d+' = '+f2(Qs)},{h:'5 · The gap and the loss',p:'The short side sets how much trades; the rest are lost.',calc:(kind==='non-binding'?'no gap':(kind==='ceiling'?'shortage = '+f2(Qd-Qs):'surplus = '+f2(Qs-Qd)))+'\ntraded = '+f2(traded)+',  lost value = $'+f2(DWL)}]}; },
     sync:function(self,v){ self.st.a=v.a; self.st.c=v.c; self.st.ctrl=v.ctrl; var P0=v.a-((v.a-v.c)/(v.b+v.d))*v.b; self.st.mode=v.ctrl<P0?'ceiling':'floor'; }
   }
 },
 
-/* 10 — EXTERNALITIES */
+/* 10, EXTERNALITIES */
 {
   key:'extern', icon:'🏭', sbTitle:"A factory's smoke",
   QMAX:100, PMAX:100, xlabel:'How many made', ylabel:'Price ($)', eb:1, ed:1, init:{ a:100, c:10, ext:24, showSocial:false, showDWL:false },
@@ -604,7 +604,7 @@ var CHAPTERS = [
   sliders:[{k:'ext',label:'Harm to neighbors / item',min:0,max:60,step:1,color:C.pur,dec:0},{k:'a',label:'Value of first item (a)',min:20,max:200,step:1,color:C.dem,dec:0},{k:'c',label:'Factory’s start cost (c)',min:0,max:100,step:1,color:C.sup,dec:0}],
   tune:true, tip:'Tip: drag in the upper part of the chart to set the harm to neighbors.',
   scenarios:[
-    {id:'free',label:'Left alone',cause:'Free market',toggle:function(self){self.st.showSocial=false;self.st.showDWL=false;},msg:"<b>Left alone,</b> the factory makes as much as buyers will pay for, looking only at its own costs — and ignores the smoke it dumps on neighbors."},
+    {id:'free',label:'Left alone',cause:'Free market',toggle:function(self){self.st.showSocial=false;self.st.showDWL=false;},msg:"<b>Left alone,</b> the factory makes as much as buyers will pay for, looking only at its own costs, and ignores the smoke it dumps on neighbors."},
     {id:'true',label:'True cost',cause:'True cost',toggle:function(self){self.st.showSocial=true;self.st.showDWL=false;},msg:"<b>The real cost is higher.</b> Add the harm to neighbors and you get the <b>true cost</b> (purple line). The <span style='color:#C0492B;font-weight:700'>best amount for all</span> is smaller than the market makes."},
     {id:'waste',label:'Show waste',cause:'The waste',toggle:function(self){self.st.showSocial=true;self.st.showDWL=true;},msg:"<b>Wasted value.</b> Every item past the best amount costs everyone more than it’s worth to the buyer. The pink triangle is that waste."},
     {id:'charge',label:'Charge for harm',cause:'Charge the harm',toggle:function(self){self.st.showSocial=true;self.st.showDWL=false;},msg:"<b>The fix.</b> Charge the factory exactly the harm it causes (a <b>Pigouvian tax</b>). Now it makes the best amount, and the waste is gone."},
@@ -638,7 +638,7 @@ var CHAPTERS = [
   }
 },
 
-/* 11 — TRADE */
+/* 11, TRADE */
 {
   key:'trade', icon:'🚢', sbTitle:'Who should do which job?',
   QMAX:110, PMAX:90, xlabel:'Wheat', ylabel:'Cloth', init:{ WH:100, CH:50, WF:40, CF:80, phase:'autarky', hw:null, hc:null, fw:null, fc:null },
@@ -673,9 +673,9 @@ var CHAPTERS = [
     self.setT('ca_oh',d.ocH.toFixed(2)+' cloth'); self.setT('ca_of',d.ocF.toFixed(2)+' cloth'); self.setT('ca_ca',d.ocH<d.ocF?'Home':'Foreign'); self.setT('ca_gain',trade?'both past their line':'on your own');
   },
   scenarios:[
-    {id:'alone',label:'🏝 Alone',cause:'Going it alone',toggle:function(self){self.st.phase='autarky';self.st.hw=null;self.st.hc=null;self.st.fw=null;self.st.fc=null;},msg:"<b>On your own.</b> With no swapping, each roommate can only have what they make — a point right <i>on</i> their own line. One may be faster at both jobs, but what matters is what each gives up."},
-    {id:'who',label:'🔍 Who gives up less?',cause:'Who gives up less',toggle:function(self){},msg:"<b>Who skips the least cloth to make wheat?</b> Whoever skips less should make the wheat — that's their <b>comparative advantage</b> (being the lower-skip maker, even if the other is faster at everything). The other makes the cloth."},
-    {id:'swap',label:'🚢 Split & swap',cause:'Split the work',toggle:function(self){self.st.phase='trade';},msg:"<b>Each does one job, then swaps.</b> They trade at a rate <i>between</i> the two skip-costs. Both gold stars now sit <span style='color:#1E7468;font-weight:700'>past their own line</span> — more wheat <i>and</i> more cloth than either could make alone."},
+    {id:'alone',label:'🏝 Alone',cause:'Going it alone',toggle:function(self){self.st.phase='autarky';self.st.hw=null;self.st.hc=null;self.st.fw=null;self.st.fc=null;},msg:"<b>On your own.</b> With no swapping, each roommate can only have what they make, a point right <i>on</i> their own line. One may be faster at both jobs, but what matters is what each gives up."},
+    {id:'who',label:'🔍 Who gives up less?',cause:'Who gives up less',toggle:function(self){},msg:"<b>Who skips the least cloth to make wheat?</b> Whoever skips less should make the wheat, that's their <b>comparative advantage</b> (being the lower-skip maker, even if the other is faster at everything). The other makes the cloth."},
+    {id:'swap',label:'🚢 Split & swap',cause:'Split the work',toggle:function(self){self.st.phase='trade';},msg:"<b>Each does one job, then swaps.</b> They trade at a rate <i>between</i> the two skip-costs. Both gold stars now sit <span style='color:#1E7468;font-weight:700'>past their own line</span>, more wheat <i>and</i> more cloth than either could make alone."},
   ],
   play:['alone','who','swap'],
   reset:{toggle:function(self){self.st.phase='autarky';self.st.hw=null;self.st.hc=null;self.st.fw=null;self.st.fc=null;},cause:'Reset',msg:'Two lines, one lesson: both can end up past their own line by splitting the work and swapping.'},
@@ -690,7 +690,7 @@ var CHAPTERS = [
     presets:[{name:'Classic',values:{WH:100,CH:50,WF:40,CF:80}},{name:'Home dominant',values:{WH:120,CH:90,WF:40,CF:60}},{name:'Reversed',values:{WH:50,CH:100,WF:80,CF:40}},{name:'Near tie',values:{WH:100,CH:50,WF:60,CF:32}}],
     solve:function(v){ var WH=v.WH,CH=v.CH,WF=v.WF,CF=v.CF; if(WH<=0||CH<=0||WF<=0||CF<=0) return {answer:'Every number has to be bigger than zero.',steps:[]};
       var ocH=CH/WH, ocF=CF/WF, homeCheaper=ocH<ocF, wheatC=homeCheaper?'Home':'Foreign', clothC=homeCheaper?'Foreign':'Home';
-      var answer=Math.abs(ocH-ocF)<1e-9?('Making 1 wheat costs both '+f2(ocH)+' cloth — exactly the same. <b>Nothing to gain by swapping.</b>'):('Making 1 wheat costs Home '+f2(ocH)+' cloth and Foreign '+f2(ocF)+' cloth. <b>'+wheatC+'</b> gives up less, so '+wheatC+' makes the wheat and <b>'+clothC+'</b> makes the cloth.'), lo=Math.min(ocH,ocF), hi=Math.max(ocH,ocF);
+      var answer=Math.abs(ocH-ocF)<1e-9?('Making 1 wheat costs both '+f2(ocH)+' cloth, exactly the same. <b>Nothing to gain by swapping.</b>'):('Making 1 wheat costs Home '+f2(ocH)+' cloth and Foreign '+f2(ocF)+' cloth. <b>'+wheatC+'</b> gives up less, so '+wheatC+' makes the wheat and <b>'+clothC+'</b> makes the cloth.'), lo=Math.min(ocH,ocF), hi=Math.max(ocH,ocF);
       return {answer:answer,steps:[{h:'1 · What each can make',p:'Each line is straight, so cloth-skipped-per-wheat is the all-cloth total over the all-wheat total.',calc:'Home:    '+WH+' wheat OR '+CH+' cloth\nForeign: '+WF+' wheat OR '+CF+' cloth'},{h:'2 · Home’s skip-cost',p:'One more wheat means giving up the cloth that time could have made.',calc:'Home skips = '+CH+' / '+WH+' = '+f2(ocH)+' cloth per wheat'},{h:'3 · Foreign’s skip-cost',p:'Same sum for Foreign.',calc:'Foreign skips = '+CF+' / '+WF+' = '+f2(ocF)+' cloth per wheat'},{h:'4 · Whoever skips less makes wheat',p:wheatC+' skips less, so '+wheatC+' makes the wheat and '+clothC+' makes the cloth. It doesn’t matter if one is faster at both.',calc:'Wheat → '+wheatC+'\nCloth → '+clothC},{h:'5 · Split up, then swap',p:'Swap at any rate between the two skip-costs and both end up past their own line.',calc:'swap rate between '+f2(lo)+' and '+f2(hi)+' cloth per wheat'}]}; },
     sync:function(self,v){ self.st.WH=v.WH; self.st.CH=v.CH; self.st.WF=v.WF; self.st.CF=v.CF; self.st.phase='autarky'; self.st.hw=null; self.st.hc=null; self.st.fw=null; self.st.fc=null; }
   }
@@ -703,9 +703,9 @@ var CHAPTERS = [
    Each: { tag (source), q (question HTML), answer (bold result), steps[] }. */
 var PRACTICE = {
   sd:[
-    {tag:'Lecture 2 · in-class', q:'Demand <b>Q<sub>D</sub> = 100 − 2P</b>, supply <b>Q<sub>S</sub> = 10 + 0.5P</b>. Find the equilibrium price and quantity. Then supply falls to <b>Q<sub>S</sub> = 0.5P</b> — what is the new equilibrium?',
+    {tag:'Lecture 2 · in-class', q:'Demand <b>Q<sub>D</sub> = 100 − 2P</b>, supply <b>Q<sub>S</sub> = 10 + 0.5P</b>. Find the equilibrium price and quantity. Then supply falls to <b>Q<sub>S</sub> = 0.5P</b>, what is the new equilibrium?',
       answer:'Start: P* = $36, Q* = 28. After supply falls: P* = $40, Q* = 20 (price up, quantity down).',
-      steps:[{h:'1 · Set demand = supply',p:'Equilibrium is where the two are equal.',calc:'100 − 2P = 10 + 0.5P\n90 = 2.5P  →  P* = $36'},{h:'2 · Quantity',p:'Plug P* into either equation.',calc:'Q* = 100 − 2(36) = 28'},{h:'3 · Supply falls',p:'Less is offered at every price (intercept 10 → 0). Re-solve.',calc:'100 − 2P = 0.5P\n100 = 2.5P  →  P* = $40,  Q* = 20'},{h:'4 · Read it',p:'A leftward supply shift raises the price and lowers the quantity — the equilibrium climbs the demand curve.'}]},
+      steps:[{h:'1 · Set demand = supply',p:'Equilibrium is where the two are equal.',calc:'100 − 2P = 10 + 0.5P\n90 = 2.5P  →  P* = $36'},{h:'2 · Quantity',p:'Plug P* into either equation.',calc:'Q* = 100 − 2(36) = 28'},{h:'3 · Supply falls',p:'Less is offered at every price (intercept 10 → 0). Re-solve.',calc:'100 − 2P = 0.5P\n100 = 2.5P  →  P* = $40,  Q* = 20'},{h:'4 · Read it',p:'A leftward supply shift raises the price and lowers the quantity, the equilibrium climbs the demand curve.'}]},
     {tag:'Lecture 4 · Christmas trees', q:'The Cambridge market for Christmas trees: <b>Q<sub>d</sub> = 16,000 − 125P</b> and <b>Q<sub>s</sub> = 4,400 + 165P</b> (Q = trees, P = $/tree). Find the competitive equilibrium.',
       answer:'P* = $40 per tree, Q* = 11,000 trees.',
       steps:[{h:'1 · Set Q_d = Q_s',p:'Find the price that clears the market.',calc:'16,000 − 125P = 4,400 + 165P\n11,600 = 290P  →  P* = $40'},{h:'2 · Quantity',p:'Plug back in.',calc:'Q* = 16,000 − 125(40) = 11,000 trees'}]}
@@ -716,16 +716,16 @@ var PRACTICE = {
       steps:[{h:'1 · The formula',p:'Elasticity = (slope of Q in the equation) × (P*/Q*).'},{h:'2 · Demand',p:'The slope of Q with respect to P is −3,200.',calc:'E_d = −3,200 × (1.95 / 1,560) = −4'},{h:'3 · Supply',p:'The slope of Q with respect to P is 800.',calc:'E_s = 800 × (1.95 / 1,560) = +1'},{h:'4 · Read it',p:'|E_d| = 4 > 1, so buyers are very price-sensitive; supply responds one-for-one.'}]},
     {tag:'Quiz 1', q:'Can a firm pass a cost increase (say a tariff on its inputs) through to consumers? What does it depend on?',
       answer:'It depends on the elasticity of demand. Inelastic demand → the firm passes most of it on; elastic demand → the firm absorbs most of it.',
-      steps:[{h:'1 · A cost rise shifts supply in',p:'A tariff raises costs, pushing the supply curve inward. How much the price rises depends on the demand curve’s shape.'},{h:'2 · Inelastic demand',p:'Buyers barely cut back (necessities, no substitutes — cigarettes, medicine, winter heating). The firm raises price a lot; consumers bear most of the cost.'},{h:'3 · Elastic demand',p:'Buyers have substitutes and quit easily. A price rise loses many sales, so the firm absorbs most of the cost.'},{h:'4 · Key subtlety',p:'This is a movement ALONG the demand curve (caused by the supply shift), not a shift of demand itself.'}]}
+      steps:[{h:'1 · A cost rise shifts supply in',p:'A tariff raises costs, pushing the supply curve inward. How much the price rises depends on the demand curve’s shape.'},{h:'2 · Inelastic demand',p:'Buyers barely cut back (necessities, no substitutes, cigarettes, medicine, winter heating). The firm raises price a lot; consumers bear most of the cost.'},{h:'3 · Elastic demand',p:'Buyers have substitutes and quit easily. A price rise loses many sales, so the firm absorbs most of the cost.'},{h:'4 · Key subtlety',p:'This is a movement ALONG the demand curve (caused by the supply shift), not a shift of demand itself.'}]}
   ],
   consumer:[
     {tag:'Worked example', q:'You have <b>$120</b> to spend, X costs <b>$4</b>, Y costs <b>$4</b>, and you like the two equally (slice a = 0.5 on each). What is your best bundle?',
       answer:'Buy 15 of X and 15 of Y.',
-      steps:[{h:'1 · Spend a fixed slice on each',p:'With these tastes you put slice a = 0.5 of your money on X and the rest on Y.',calc:'spend on X = 0.5 × 120 = $60\nspend on Y = 0.5 × 120 = $60'},{h:'2 · Divide by each price',p:'Quantity = money on that good ÷ its price.',calc:'X = 60 / 4 = 15\nY = 60 / 4 = 15'},{h:'3 · If X went on sale to $2',p:'The same $60 on X now buys more: X = 60/2 = 30. Cheaper X → you buy more of it — that’s why demand slopes down.'}]}
+      steps:[{h:'1 · Spend a fixed slice on each',p:'With these tastes you put slice a = 0.5 of your money on X and the rest on Y.',calc:'spend on X = 0.5 × 120 = $60\nspend on Y = 0.5 × 120 = $60'},{h:'2 · Divide by each price',p:'Quantity = money on that good ÷ its price.',calc:'X = 60 / 4 = 15\nY = 60 / 4 = 15'},{h:'3 · If X went on sale to $2',p:'The same $60 on X now buys more: X = 60/2 = 30. Cheaper X → you buy more of it, that’s why demand slopes down.'}]}
   ],
   costs:[
-    {tag:'Lecture 4 · Caris', q:'Caris makes cutting tools. Fixed cost <b>$10,000</b>; variable cost rises with output. A client pays <b>$200/unit</b>. How many should Caris make — and should it accept the offer?',
-      answer:'Make 700 units (the last level where the next-unit cost stays below $200). Profit = 200×700 − 119,000 = $21,000 — accept.',
+    {tag:'Lecture 4 · Caris', q:'Caris makes cutting tools. Fixed cost <b>$10,000</b>; variable cost rises with output. A client pays <b>$200/unit</b>. How many should Caris make, and should it accept the offer?',
+      answer:'Make 700 units (the last level where the next-unit cost stays below $200). Profit = 200×700 − 119,000 = $21,000, accept.',
       steps:[{h:'1 · Total and average cost',p:'Total cost = fixed + variable; average cost = total ÷ units.',calc:'Q=400: TC=73,000  ATC=$182.5\nQ=700: TC=119,000 ATC=$170\nQ=800: TC=145,000 ATC=$181'},{h:'2 · Cost of one more batch (MC)',p:'MC = change in variable cost ÷ change in units.',calc:'→700: (109k−90k)/100 = $190\n700→800: (135k−109k)/100 = $260'},{h:'3 · Produce while MC < price',p:'Make each unit while it costs less than the $200 it sells for. At 700 the next-batch cost is $190 (< 200); at 800 it is $260 (> 200).',calc:'stop at Q = 700'},{h:'4 · Check profit',p:'Price beats average cost (200 > 170), so it’s profitable.',calc:'profit = (200 − 170) × 700 = $21,000'}]}
   ],
   profit:[
@@ -738,13 +738,13 @@ var PRACTICE = {
       answer:'Q* = 1,000, P* = $5,000, profit = $4,000,000, deadweight loss = $2,000,000.',
       steps:[{h:'1 · Set MR = MC',p:'A monopolist makes the amount where extra money equals extra cost. (MR has twice the slope of demand.)',calc:'9,000 − 8Q = 1,000\nQ* = 1,000'},{h:'2 · Price off demand',p:'Read the price buyers pay from the demand line (not MR).',calc:'P* = 9,000 − 4(1,000) = $5,000'},{h:'3 · Profit',p:'(price − cost) × quantity.',calc:'π = (5,000 − 1,000) × 1,000 = $4,000,000'},{h:'4 · Deadweight loss',p:'A competitive market would set P = MC = 1,000, giving Q = 2,000. The lost trades form a triangle.',calc:'DWL = ½ × (2,000 − 1,000) × (5,000 − 1,000)\n     = $2,000,000'}]},
     {tag:'Practice set 2 · markup', q:'The Amazing Restaurant is the only one on the island. Marginal cost is <b>$15/meal</b>. Tourists’ demand elasticity is <b>−1.33</b>; locals’ is <b>−1.5</b>. Using the markup rule (P − MC)/P = −1/e, what price should it charge each group?',
-      answer:'Tourists: $60. Locals: $45 — less elastic buyers pay a higher markup.',
+      answer:'Tourists: $60. Locals: $45, less elastic buyers pay a higher markup.',
       steps:[{h:'1 · Markup rule',p:'The gap between price and cost, as a share of price, equals −1/elasticity.',calc:'(P − MC) / P = −1/e'},{h:'2 · Tourists (e = −1.33)',p:'−1/(−1.33) = ¾.',calc:'(P − 15)/P = 3/4  →  P = $60'},{h:'3 · Locals (e = −1.5)',p:'−1/(−1.5) = ⅔.',calc:'(P − 15)/P = 2/3  →  P = $45'},{h:'4 · Read it',p:'Tourists are less price-sensitive, so they face the bigger markup.'}]}
   ],
   game:[
     {tag:'Prisoner’s dilemma', q:'Two shops each choose Hold or Cut. Payoffs (Shop 1, Shop 2): both Hold (8, 8); Hold vs Cut (2, 10); Cut vs Hold (10, 2); both Cut (4, 4). Find each shop’s best move and where they end up.',
       answer:'Cutting is a dominant strategy for both → Nash equilibrium (Cut, Cut) = (4, 4), even though (Hold, Hold) = (8, 8) is better for both.',
-      steps:[{h:'1 · Shop 1’s best reply',p:'If Shop 2 holds: Cut 10 beats Hold 8. If Shop 2 cuts: Cut 4 beats Hold 2. Cutting wins either way.',calc:'10 > 8  and  4 > 2  →  Cut dominates'},{h:'2 · Shop 2 is identical',p:'The game is a mirror image, so cutting dominates for Shop 2 too.'},{h:'3 · Where they settle',p:'Both play their dominant strategy → (Cut, Cut). Neither can do better by switching alone — that’s the Nash equilibrium.',calc:'Nash = (Cut, Cut) = (4, 4)'},{h:'4 · The dilemma',p:'Both would earn 8 by Holding, but each is tempted to grab 10 — so they’re trapped at 4. T > R > P > S (10 > 8 > 4 > 2) is what makes it a dilemma.'}]}
+      steps:[{h:'1 · Shop 1’s best reply',p:'If Shop 2 holds: Cut 10 beats Hold 8. If Shop 2 cuts: Cut 4 beats Hold 2. Cutting wins either way.',calc:'10 > 8  and  4 > 2  →  Cut dominates'},{h:'2 · Shop 2 is identical',p:'The game is a mirror image, so cutting dominates for Shop 2 too.'},{h:'3 · Where they settle',p:'Both play their dominant strategy → (Cut, Cut). Neither can do better by switching alone, that’s the Nash equilibrium.',calc:'Nash = (Cut, Cut) = (4, 4)'},{h:'4 · The dilemma',p:'Both would earn 8 by Holding, but each is tempted to grab 10, so they’re trapped at 4. T > R > P > S (10 > 8 > 4 > 2) is what makes it a dilemma.'}]}
   ],
   tax:[
     {tag:'Worked example', q:'Demand <b>P = 100 − Q</b>, supply <b>P = 10 + Q</b>. The government puts a <b>$20</b> tax on each unit. Find the price buyers pay, the price sellers keep, and who bears more.',
@@ -753,56 +753,56 @@ var PRACTICE = {
   ],
   pricectrl:[
     {tag:'Lecture 4 · price cap', q:'Tavneet’s tree farm has <b>TC = 20q + q²</b> (so MC = 20 + 2q). It becomes illegal to sell trees for more than <b>$20</b>. Should she keep farming, or go back to teaching?',
-      answer:'At a $20 cap she would produce q = 0 — the cap sits right at the start of her cost curve, so there’s no profitable tree to make. She shuts the farm.',
-      steps:[{h:'1 · Produce where MC = price',p:'A price-taker makes trees until the next one would cost more than it sells for.',calc:'MC = price\n20 + 2q = 20  →  q = 0'},{h:'2 · Why zero',p:'Her very first tree already costs about $20 to make (MC at q≈0 is 20). The cap leaves no room above cost, so any tree loses money.'},{h:'3 · Decision',p:'With nothing worth producing at the capped price, she closes the farm — the binding ceiling drives output to zero.'}]}
+      answer:'At a $20 cap she would produce q = 0, the cap sits right at the start of her cost curve, so there’s no profitable tree to make. She shuts the farm.',
+      steps:[{h:'1 · Produce where MC = price',p:'A price-taker makes trees until the next one would cost more than it sells for.',calc:'MC = price\n20 + 2q = 20  →  q = 0'},{h:'2 · Why zero',p:'Her very first tree already costs about $20 to make (MC at q≈0 is 20). The cap leaves no room above cost, so any tree loses money.'},{h:'3 · Decision',p:'With nothing worth producing at the capped price, she closes the farm, the binding ceiling drives output to zero.'}]}
   ],
   extern:[
     {tag:'Lecture 6 · Coase theorem', q:'A factory’s smoke harms a nearby farmer. A filter that stops the smoke costs <b>$80</b>; the harm to the farmer is <b>$100</b>. Show the efficient outcome (install the filter) happens no matter who holds the property right.',
-      answer:'The $80 filter gets installed either way, because $80 < $100 of harm. Who holds the right changes only who pays — not the outcome. (Coase Theorem, assuming low bargaining costs.)',
-      steps:[{h:'1 · What’s efficient',p:'The filter costs $80 and removes $100 of harm. Spending $80 to avoid $100 of damage is worth it — the filter should be installed.'},{h:'2 · Farmer owns clean air',p:'The farmer can demand the factory stop. Paying $80 for the filter beats $100 of damages, so the factory installs it.',calc:'factory pays $80'},{h:'3 · Factory owns the right to pollute',p:'The farmer would rather pay than suffer $100 of harm, so the farmer pays the factory between $80 and $100 to install it.',calc:'farmer pays $80–$100'},{h:'4 · Coase Theorem',p:'With clear property rights and low bargaining costs, private bargaining reaches the efficient outcome regardless of who holds the right — the right only decides who pays.'}]}
+      answer:'The $80 filter gets installed either way, because $80 < $100 of harm. Who holds the right changes only who pays, not the outcome. (Coase Theorem, assuming low bargaining costs.)',
+      steps:[{h:'1 · What’s efficient',p:'The filter costs $80 and removes $100 of harm. Spending $80 to avoid $100 of damage is worth it, the filter should be installed.'},{h:'2 · Farmer owns clean air',p:'The farmer can demand the factory stop. Paying $80 for the filter beats $100 of damages, so the factory installs it.',calc:'factory pays $80'},{h:'3 · Factory owns the right to pollute',p:'The farmer would rather pay than suffer $100 of harm, so the farmer pays the factory between $80 and $100 to install it.',calc:'farmer pays $80 to $100'},{h:'4 · Coase Theorem',p:'With clear property rights and low bargaining costs, private bargaining reaches the efficient outcome regardless of who holds the right, the right only decides who pays.'}]}
   ],
   trade:[
     {tag:'Worked example', q:'Home can make <b>100 wheat</b> OR <b>50 cloth</b>; Foreign can make <b>40 wheat</b> OR <b>80 cloth</b>. Who should specialize in wheat, and why do both gain by trading?',
       answer:'Home should make the wheat (it gives up only 0.5 cloth per wheat vs Foreign’s 2). They trade at a rate between 0.5 and 2 cloth per wheat and both end up beyond their own frontier.',
-      steps:[{h:'1 · Each one’s give-up cost',p:'Cloth skipped per wheat = all-cloth total ÷ all-wheat total.',calc:'Home:    50/100 = 0.5 cloth per wheat\nForeign: 80/40  = 2.0 cloth per wheat'},{h:'2 · Lower give-up cost makes wheat',p:'Home sacrifices less cloth to make a wheat, so Home has the comparative advantage in wheat — even if Foreign were faster at both.',calc:'Wheat → Home,  Cloth → Foreign'},{h:'3 · Trade and both gain',p:'Each fully specializes, then swaps at a rate between the two give-up costs (0.5–2 cloth per wheat). Both consume a bundle past their own line — more wheat and more cloth than either could make alone.'}]}
+      steps:[{h:'1 · Each one’s give-up cost',p:'Cloth skipped per wheat = all-cloth total ÷ all-wheat total.',calc:'Home:    50/100 = 0.5 cloth per wheat\nForeign: 80/40  = 2.0 cloth per wheat'},{h:'2 · Lower give-up cost makes wheat',p:'Home sacrifices less cloth to make a wheat, so Home has the comparative advantage in wheat, even if Foreign were faster at both.',calc:'Wheat → Home,  Cloth → Foreign'},{h:'3 · Trade and both gain',p:'Each fully specializes, then swaps at a rate between the two give-up costs (0.5 to 2 cloth per wheat). Both consume a bundle past their own line, more wheat and more cloth than either could make alone.'}]}
   ]
 };
 
 /* ============== PLAIN-LANGUAGE "WHAT IS THIS?" EXPLAINERS ================== */
 var EXPLAIN = {
-  sd:{plain:"Buyers want more of something when it's cheap. Sellers want to make more when it's expensive. The price settles at the one spot where the amount people want to buy exactly equals the amount sellers want to sell — the <b>equilibrium</b>.",
-    example:"Strawberries at a market. Price them at $10 a box and almost no one buys — boxes pile up. Price them at $1 and they sell out in minutes, leaving people empty-handed. Around $3, the last box sells just as the last happy customer leaves. That's the equilibrium price.",
-    words:[["Demand","how much people want to buy at each price (more when cheaper)."],["Supply","how much sellers want to sell at each price (more when pricier)."],["Equilibrium","the price where buyers' and sellers' plans match — nothing left over, no one missing out."]]},
+  sd:{plain:"Buyers want more of something when it's cheap. Sellers want to make more when it's expensive. The price settles at the one spot where the amount people want to buy exactly equals the amount sellers want to sell, the <b>equilibrium</b>.",
+    example:"Strawberries at a market. Price them at $10 a box and almost no one buys, boxes pile up. Price them at $1 and they sell out in minutes, leaving people empty-handed. Around $3, the last box sells just as the last happy customer leaves. That's the equilibrium price.",
+    words:[["Demand","how much people want to buy at each price (more when cheaper)."],["Supply","how much sellers want to sell at each price (more when pricier)."],["Equilibrium","the price where buyers' and sellers' plans match, nothing left over, no one missing out."]]},
   elastic:{plain:"Elasticity measures how <b>touchy</b> buyers are about price. If a small price rise makes lots of people stop buying, demand is <b>elastic</b> (sensitive). If people keep buying no matter what, it's <b>inelastic</b> (stubborn).",
-    example:"Raise the price of one brand of soda and shoppers just grab a different brand — very sensitive. Raise the price of life-saving medicine and people still buy it because they have to — barely sensitive. That difference is elasticity.",
+    example:"Raise the price of one brand of soda and shoppers just grab a different brand, very sensitive. Raise the price of life-saving medicine and people still buy it because they have to, barely sensitive. That difference is elasticity.",
     words:[["Elastic","buyers react a lot; a price cut can earn you more because so many more people buy."],["Inelastic","buyers barely react; you can raise the price and still keep most of your sales."],["|E| (sensitivity)","the number that captures this. Above 1 = sensitive, below 1 = stubborn."]]},
   consumer:{plain:"You have a limited amount of money and many things you'd like. You spend it on the mix that makes you happiest. As something gets more expensive, you naturally buy less of it and more of the cheaper stuff.",
-    example:"You've got $20 for lunch this week. Coffee and sandwiches both tempt you. If coffee gets pricier, you'll buy fewer coffees and a few more sandwiches — landing on the combo that feels best for your $20.",
+    example:"You've got $20 for lunch this week. Coffee and sandwiches both tempt you. If coffee gets pricier, you'll buy fewer coffees and a few more sandwiches, landing on the combo that feels best for your $20.",
     words:[["Budget line","every combination of two things you can just afford with your money."],["Best buy (optimal bundle)","the affordable mix that makes you happiest."],["Happiness (utility)","economists' word for how satisfied a choice makes you."]]},
-  costs:{plain:"Making things costs money in two flavors: costs that stay the same no matter how much you make, and costs that grow with each extra item. Spreading the fixed costs over more items makes each item cheaper — up to a point.",
-    example:"A bakery pays rent and buys an oven whether it bakes 1 loaf or 1,000 (fixed cost). Flour and electricity go up with every loaf (variable cost). Baking more spreads the rent across more loaves, so each loaf gets cheaper — until the kitchen gets crowded and costs creep back up.",
+  costs:{plain:"Making things costs money in two flavors: costs that stay the same no matter how much you make, and costs that grow with each extra item. Spreading the fixed costs over more items makes each item cheaper, up to a point.",
+    example:"A bakery pays rent and buys an oven whether it bakes 1 loaf or 1,000 (fixed cost). Flour and electricity go up with every loaf (variable cost). Baking more spreads the rent across more loaves, so each loaf gets cheaper, until the kitchen gets crowded and costs creep back up.",
     words:[["Fixed cost","doesn't change with how much you make (rent, machines)."],["Variable cost","grows with each item (ingredients, power)."],["Marginal cost (\"next loaf\")","what it costs to make just one more."],["Average cost (\"typical loaf\")","total cost shared across every item."]]},
   profit:{plain:"Keep making more as long as the next item sells for more than it costs to make. Stop right when one more would cost more than it earns. That's the point of biggest profit.",
-    example:"A juice stall earns $3 per cup. Early cups are cheap to make, so each adds profit. As it squeezes more, ingredients and effort per cup rise. The moment the next cup would cost more than $3 to make, the stall stops — one more would lose money.",
+    example:"A juice stall earns $3 per cup. Early cups are cheap to make, so each adds profit. As it squeezes more, ingredients and effort per cup rise. The moment the next cup would cost more than $3 to make, the stall stops, one more would lose money.",
     words:[["Profit","money in minus money out: (price − average cost) × number sold."],["Marginal cost","the cost of one more item."],["Shut-down point","if the price can't even cover the make-each-item cost, it's better to close than keep selling."]]},
-  monopoly:{plain:"A monopoly is the <b>only</b> seller of something, so it controls the price. It picks the price that earns it the most — making fewer items and charging more than a competitive market would. Some people who'd happily have bought at a fair price get priced out; those lost sales are value the world misses out on.",
-    example:"One company owns the only bridge into town and charges a toll. A busy road might let 100 cars cross cheaply. The bridge owner sets a high toll so only 60 cars cross — earning more per car but turning away 40 drivers who'd gladly have paid a smaller toll. Those 40 trips are the trades left on the table.",
+  monopoly:{plain:"A monopoly is the <b>only</b> seller of something, so it controls the price. It picks the price that earns it the most, making fewer items and charging more than a competitive market would. Some people who'd happily have bought at a fair price get priced out; those lost sales are value the world misses out on.",
+    example:"One company owns the only bridge into town and charges a toll. A busy road might let 100 cars cross cheaply. The bridge owner sets a high toll so only 60 cars cross, earning more per car but turning away 40 drivers who'd gladly have paid a smaller toll. Those 40 trips are the trades left on the table.",
     words:[["Monopoly","the single seller of a product, with no direct competition."],["Markup","how far the price sits above what it actually cost to make the item."],["Marginal revenue (\"extra money\")","the extra cash from selling one more. For a monopoly it drops fast, because to sell more it must lower the price for everyone."],["Deadweight loss (\"lost value\")","the worth of all the sales that never happen because the price is set too high."]]},
-  game:{plain:"When two sides each make a choice and the result depends on what <b>both</b> do, smart players can still end up in a spot that's worse for everyone — because each is just protecting itself.",
-    example:"Two rival shops decide whether to hold prices or start a price war. If both hold, both do well. But each fears the other will undercut, so both cut prices — and both earn less than if they'd just held. Each acted sensibly, yet together they lost. That's the prisoner's dilemma.",
+  game:{plain:"When two sides each make a choice and the result depends on what <b>both</b> do, smart players can still end up in a spot that's worse for everyone, because each is just protecting itself.",
+    example:"Two rival shops decide whether to hold prices or start a price war. If both hold, both do well. But each fears the other will undercut, so both cut prices, and both earn less than if they'd just held. Each acted sensibly, yet together they lost. That's the prisoner's dilemma.",
     words:[["Dominant strategy","a move that's your best choice no matter what the other side does."],["Nash equilibrium","the outcome where neither side wants to change its move alone."],["Prisoner's dilemma","a classic case where both protecting themselves leaves both worse off than cooperating would."]]},
   tax:{plain:"When the government taxes a sale, it splits one price into two: a higher price buyers pay and a lower price sellers keep, with the tax in between. Who feels it more depends on who can more easily walk away.",
-    example:"Put a $2 tax on coffee. Buyers might pay $1 more and sellers keep $1 less — split evenly. But if coffee drinkers are addicted and can't quit, they swallow most of the tax, while the café barely feels it.",
+    example:"Put a $2 tax on coffee. Buyers might pay $1 more and sellers keep $1 less, split evenly. But if coffee drinkers are addicted and can't quit, they swallow most of the tax, while the café barely feels it.",
     words:[["Tax incidence","who actually bears the cost of a tax, regardless of who hands it to the government."],["Tax wedge","the gap the tax drives between the buyer's price and the seller's price."],["Lost sales (deadweight loss)","purchases that no longer happen because the tax made things pricier."]]},
-  pricectrl:{plain:"Sometimes a law caps a price (a <b>ceiling</b>) or sets a minimum (a <b>floor</b>). If the cap is below the natural price, more people want it than sellers will provide — a shortage. If the floor is above the natural price, sellers offer more than people want — a surplus.",
-    example:"<b>Ceiling:</b> rent control caps rents low, so lots of people want flats but few are offered — a shortage and long waitlists. <b>Floor:</b> a minimum wage sets pay above what some employers would offer, so more people want jobs than there are jobs — a labor surplus (unemployment).",
+  pricectrl:{plain:"Sometimes a law caps a price (a <b>ceiling</b>) or sets a minimum (a <b>floor</b>). If the cap is below the natural price, more people want it than sellers will provide, a shortage. If the floor is above the natural price, sellers offer more than people want, a surplus.",
+    example:"<b>Ceiling:</b> rent control caps rents low, so lots of people want flats but few are offered, a shortage and long waitlists. <b>Floor:</b> a minimum wage sets pay above what some employers would offer, so more people want jobs than there are jobs, a labor surplus (unemployment).",
     words:[["Price ceiling","a legal maximum price (e.g. rent control)."],["Price floor","a legal minimum price (e.g. minimum wage)."],["Binding","when the rule actually changes things (a ceiling below, or floor above, the natural price)."],["Shortage / surplus","too many buyers and not enough goods, or too many goods and not enough buyers."]]},
   extern:{plain:"Sometimes a sale hurts (or helps) people who aren't the buyer or seller. When it hurts bystanders, the market makes too much of it, because the seller doesn't count the harm. Charging the seller exactly that harm fixes it.",
-    example:"A factory makes cheap products but its smoke bothers the whole neighborhood. The factory only counts its own costs, so it makes a lot. If it had to pay for the harm its smoke causes, it would make less — the amount that's actually best for everyone, neighbors included.",
+    example:"A factory makes cheap products but its smoke bothers the whole neighborhood. The factory only counts its own costs, so it makes a lot. If it had to pay for the harm its smoke causes, it would make less, the amount that's actually best for everyone, neighbors included.",
     words:[["Externality","a cost (or benefit) that lands on people outside the deal."],["True cost (social cost)","the seller's own cost plus the harm to others."],["Corrective charge (Pigouvian tax)","a fee equal to the harm that nudges the seller to the right amount."]]},
-  trade:{plain:"Two people (or countries) both end up with more stuff if each focuses on the job they give up the least to do, then they swap. What matters isn't who's faster — it's who sacrifices less.",
+  trade:{plain:"Two people (or countries) both end up with more stuff if each focuses on the job they give up the least to do, then they swap. What matters isn't who's faster, it's who sacrifices less.",
     example:"Two roommates split chores. One is great at both cooking and cleaning, the other slower at both. They still both win if the fast one focuses on whichever chore the slow one is comparatively worst at, and they trade. Each does what they \"skip the least\" for, swap, and both have more free time than going it alone.",
-    words:[["Opportunity cost (\"skip-cost\")","what you give up to do something else."],["Comparative advantage","being the one who gives up the least to make a particular thing — this decides who makes what, not raw speed."],["Gains from trade","both sides ending up better off after specializing and swapping."]]}
+    words:[["Opportunity cost (\"skip-cost\")","what you give up to do something else."],["Comparative advantage","being the one who gives up the least to make a particular thing, this decides who makes what, not raw speed."],["Gains from trade","both sides ending up better off after specializing and swapping."]]}
 };
 
 /* ===================== TIPS FOR THE QUIZ SHEET ============================ */
@@ -810,9 +810,9 @@ var TIPS = {
   sd:["Set demand = supply and solve for P, then plug back in for Q.","A shift moves the whole curve; a price change just slides along it.","Demand-right → P and Q both up. Supply-right → P down, Q up."],
   elastic:["Elasticity = % change in quantity ÷ % change in price (use the average/midpoint to stay symmetric).","|E| > 1 elastic → cut price to earn more; |E| < 1 inelastic → raise price.","On a straight demand line the top is elastic, the bottom inelastic, the middle unit-elastic (max revenue)."],
   consumer:["Spend a fixed slice of income on each good: a on X, (1−a) on Y.","Quantity of a good = money spent on it ÷ its price.","Best bundle = where the budget line just touches the highest indifference curve (MRS = price ratio)."],
-  costs:["ATC = (fixed + variable) ÷ quantity; MC = change in total cost ÷ change in quantity.","MC below ATC pulls the average down; MC above pushes it up — they cross at minimum ATC.","Fixed cost per unit always falls as you make more."],
+  costs:["ATC = (fixed + variable) ÷ quantity; MC = change in total cost ÷ change in quantity.","MC below ATC pulls the average down; MC above pushes it up, they cross at minimum ATC.","Fixed cost per unit always falls as you make more."],
   profit:["Make units until MC = price (one more would cost more than it sells for).","Profit = (price − ATC) × quantity.","Shut-down rule: price < AVC → stop; AVC ≤ price < ATC → keep going at a loss."],
-  monopoly:["MR has the same intercept as demand but twice the slope: MR = a − 2bQ.","Set MR = MC for the quantity, then read the price off the demand curve.","Markup: (P − MC)/P = −1/elasticity — less elastic demand → bigger markup."],
+  monopoly:["MR has the same intercept as demand but twice the slope: MR = a − 2bQ.","Set MR = MC for the quantity, then read the price off the demand curve.","Markup: (P − MC)/P = −1/elasticity, less elastic demand → bigger markup."],
   game:["Find each player's best reply to each of the rival's choices.","A dominant strategy beats the alternative no matter what the rival does.","Nash = the cell where neither wants to switch alone. A true dilemma needs T > R > P > S."],
   tax:["A tax opens a wedge: buyer price − seller price = tax.","New quantity Qt = (a − c − t)/(b + d); read Pb off demand, Ps off supply.","The more inelastic (steeper) side bears more; equal slopes → 50/50."],
   pricectrl:["A ceiling binds below the market price (→ shortage); a floor binds above it (→ surplus).","At the controlled price, Qd from demand and Qs from supply; the short side sets how much trades.","Deadweight loss = ½ × (lost quantity) × (price gap) at the traded amount."],
@@ -824,15 +824,15 @@ var TIPS = {
 class Component extends DCLogic {
   componentDidMount() {
     this.CH = [
-      { n:'01', grp:'Markets & Demand', eb:'Markets & Demand · Chapter 01', lead:'Demand slopes down, supply slopes up. Where they cross is the equilibrium — drag a curve or run a scenario and watch the market chase the new intersection.' },
+      { n:'01', grp:'Markets & Demand', eb:'Markets & Demand · Chapter 01', lead:'Demand slopes down, supply slopes up. Where they cross is the equilibrium, drag a curve or run a scenario and watch the market chase the new intersection.' },
       { n:'02', grp:'Markets & Demand', eb:'Markets & Demand · Chapter 02', lead:'How sharply does the amount people buy respond to a price change? Slide along the demand line and watch the money spent rise and fall.' },
-      { n:'03', grp:'Markets & Demand', eb:'Markets & Demand · Chapter 03', lead:'A budget line and equally-happy curves — find the bundle a shopper actually picks with the money they have.' },
-      { n:'04', grp:'The Firm', eb:'The Firm · Chapter 04', lead:'Fixed, variable, marginal and average cost — watch the per-loaf pieces pull apart as you bake more.' },
-      { n:'05', grp:'The Firm', eb:'The Firm · Chapter 05', lead:'A small seller makes goods until one more would cost more than it sells for. Watch profit flip — and find the close-up point.' },
+      { n:'03', grp:'Markets & Demand', eb:'Markets & Demand · Chapter 03', lead:'A budget line and equally-happy curves, find the bundle a shopper actually picks with the money they have.' },
+      { n:'04', grp:'The Firm', eb:'The Firm · Chapter 04', lead:'Fixed, variable, marginal and average cost, watch the per-loaf pieces pull apart as you bake more.' },
+      { n:'05', grp:'The Firm', eb:'The Firm · Chapter 05', lead:'A small seller makes goods until one more would cost more than it sells for. Watch profit flip, and find the close-up point.' },
       { n:'06', grp:'Market Structure', eb:'Market Structure · Chapter 06', lead:'The only seller sets its price where extra money meets extra cost. See the markup and the trades it leaves on the table.' },
-      { n:'07', grp:'Market Structure', eb:'Market Structure · Chapter 07', lead:'Two rival shops, one decision each — dominant strategies, where they settle, and why cooperation breaks down.' },
+      { n:'07', grp:'Market Structure', eb:'Market Structure · Chapter 07', lead:'Two rival shops, one decision each, dominant strategies, where they settle, and why cooperation breaks down.' },
       { n:'08', grp:'Policy & Trade', eb:'Policy & Trade · Chapter 08', lead:'Who really pays a tax? Watch the gap open between what buyers pay and sellers keep, and who ends up carrying it.' },
-      { n:'09', grp:'Policy & Trade', eb:'Policy & Trade · Chapter 09', lead:'Rent control and minimum wage — see when a price rule bites and the shortage or surplus it creates.' },
+      { n:'09', grp:'Policy & Trade', eb:'Policy & Trade · Chapter 09', lead:'Rent control and minimum wage, see when a price rule bites and the shortage or surplus it creates.' },
       { n:'10', grp:'Policy & Trade', eb:'Policy & Trade · Chapter 10', lead:'When a sale harms bystanders, the market makes too much. A charge equal to the harm brings it back in line.' },
       { n:'11', grp:'Policy & Trade', eb:'Policy & Trade · Chapter 11', lead:'Why two roommates both end up with more by each doing the job they give up the least for, then swapping.' },
     ];
@@ -874,7 +874,7 @@ class Component extends DCLogic {
   arrows(oldM, newM, cause) {
     if (!oldM || !newM || !this.ch.metricLabels) return cause ? `<b style="color:#2B2622">${cause}</b>` : (this.reason || '');
     const seg = (label, o, n) => { const d = n - o;
-      if (Math.abs(d) < 0.4) return `<span style="color:#8A8076">${label} —</span>`;
+      if (Math.abs(d) < 0.4) return `<span style="color:#8A8076">${label}, </span>`;
       return d > 0 ? `<span style="color:#1E7468;font-weight:700">${label} ↑</span>` : `<span style="color:#C0492B;font-weight:700">${label} ↓</span>`; };
     const L = this.ch.metricLabels;
     return `${cause ? `<b style="color:#2B2622">${cause}</b><br>` : ''}${seg(L[0], oldM[0], newM[0])} &nbsp;·&nbsp; ${seg(L[1], oldM[1], newM[1])}`;
@@ -926,7 +926,7 @@ class Component extends DCLogic {
     const ft = document.getElementById('ee-footer');
     if (spec.footer) ft.innerHTML = `${spec.footer.label} <b id="${spec.footer.id}" style="font-family:${MONO};"></b>`; else ft.innerHTML = '';
     // On chapters that track two numeric metrics, the price/quantity values
-    // live in the tracking bubble instead — so hide the big corner blocks
+    // live in the tracking bubble instead, so hide the big corner blocks
     // (but keep their value spans in the DOM for the bubble to read).
     const hideChips = !!spec.metricLabels;
     const chip = (host, c, dark) => { if (!c) { host.style.display = 'none'; return; } host.style.display = hideChips ? 'none' : '';
@@ -1116,7 +1116,7 @@ class Component extends DCLogic {
     const out = document.createElement('div'); out.style.cssText = 'margin-top:14px;'; mount.appendChild(out);
     const key = document.createElement('div'); key.style.cssText = 'margin-top:18px;font-size:12px;color:#8A8076;line-height:1.5;'; key.innerHTML = prob.keyHtml; mount.appendChild(key);
     function recompute(cause) {
-      let r; try { r = prob.solve(vals); } catch (e) { out.innerHTML = '<div style="color:#C0492B;font-size:13px;">Those numbers don’t work — try different values.</div>'; return; }
+      let r; try { r = prob.solve(vals); } catch (e) { out.innerHTML = '<div style="color:#C0492B;font-size:13px;">Those numbers don’t work, try different values.</div>'; return; }
       let h = '';
       if (r.scenario) h += `<div style="font-size:12px;color:#8A8076;margin-bottom:10px;">${r.scenario}</div>`;
       if (r.answer) h += `<div style="background:#2B2622;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13.5px;color:#FBD9A0;font-weight:600;">${r.answer}</div>`;
@@ -1144,7 +1144,7 @@ class Component extends DCLogic {
         <div><div style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A2937D;">Practice questions</div>
         <div style="font-family:${DISP};font-weight:700;font-size:21px;color:#2B2622;">Problems from the course</div></div>
       </div>
-      <button id="ee-print-btn" aria-label="Download this chapter as a printable quiz sheet (PDF)" title="Print / save as PDF" style="cursor:pointer;border:1px solid #DD6B4D;background:#fff;color:#C0492B;font-weight:700;font-size:13px;padding:9px 16px;border-radius:99px;display:inline-flex;align-items:center;gap:7px;">🖨 Quiz sheet (PDF)</button>
+      <button id="ee-print-btn" aria-label="Download this chapter as a printable cheat sheet (PDF) with solved examples" title="Print / save as PDF" style="cursor:pointer;border:1px solid #DD6B4D;background:#fff;color:#C0492B;font-weight:700;font-size:13px;padding:9px 16px;border-radius:99px;display:inline-flex;align-items:center;gap:7px;">🖨 Cheat sheet (PDF)</button>
     </div>`;
     html += '<div style="display:grid;gap:14px;">';
     items.forEach((it, i) => {
@@ -1178,12 +1178,12 @@ class Component extends DCLogic {
     const e = (typeof EXPLAIN !== 'undefined') && EXPLAIN[this.ch.key];
     if (!e) { mount.style.display = 'none'; mount.innerHTML = ''; return; }
     mount.style.display = '';
-    const words = e.words.map((w) => `<div style="margin:7px 0;"><b style="color:#2B2622;">${w[0]}</b> <span style="color:#6B6055;">— ${w[1]}</span></div>`).join('');
+    const words = e.words.map((w) => `<div style="margin:7px 0;"><b style="color:#2B2622;">${w[0]}</b> <span style="color:#6B6055;">,  ${w[1]}</span></div>`).join('');
     mount.innerHTML = `
       <button id="ee-explain-btn" aria-label="Plain-language explanation of this chapter" style="cursor:pointer;border:1px solid #F2C9B7;background:#FBE7DD;color:#C0492B;font-weight:700;font-size:13px;padding:8px 15px;border-radius:99px;display:inline-flex;align-items:center;gap:7px;">💡 What is this?</button>
       <div id="ee-explain-body" style="display:none;margin-top:12px;background:#fff;border:1px solid #F0E7D9;border-radius:16px;padding:18px 20px;box-shadow:0 8px 24px rgba(67,48,30,.06);max-width:680px;">
         <div style="font-size:14px;line-height:1.6;color:#2B2622;">${e.plain}</div>
-        <div style="margin-top:12px;background:#FBF6EE;border-left:3px solid #E0A33D;border-radius:8px;padding:10px 13px;font-size:13px;line-height:1.55;color:#3A332C;"><b style="color:#B07A12;">Example —</b> ${e.example}</div>
+        <div style="margin-top:12px;background:#FBF6EE;border-left:3px solid #E0A33D;border-radius:8px;padding:10px 13px;font-size:13px;line-height:1.55;color:#3A332C;"><b style="color:#B07A12;">Example:</b> ${e.example}</div>
         <div style="margin-top:14px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#A2937D;">Words to know</div>
         <div style="margin-top:6px;font-size:13px;line-height:1.45;">${words}</div>
       </div>`;
@@ -1205,15 +1205,14 @@ class Component extends DCLogic {
     const svgHTML = svg ? svg.outerHTML : '';
     const h2 = (t) => `<h2 style="font-family:${DISP};font-size:16px;color:#DD6B4D;margin:20px 0 8px;border-bottom:1px solid #EADFCD;padding-bottom:4px;">${t}</h2>`;
     const tipsHtml = tips.length ? `${h2('Tips for solving')}<ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.65;color:#2B2622;">${tips.map((t) => `<li>${t}</li>`).join('')}</ul>` : '';
-    const wordsHtml = ex ? `${h2('Words to know')}<div style="font-size:13px;line-height:1.5;">${ex.words.map((w) => `<div style="margin:5px 0;"><b>${w[0]}</b> — ${w[1]}</div>`).join('')}</div>` : '';
-    const qHtml = items.map((it, n) => `<div style="margin:14px 0;page-break-inside:avoid;"><div style="font-size:13.5px;line-height:1.55;"><b>Q${n + 1}.</b> ${it.q}</div><div style="margin-top:8px;border-bottom:1px solid #D9CDB8;height:17px;"></div><div style="border-bottom:1px solid #D9CDB8;height:17px;"></div><div style="border-bottom:1px solid #D9CDB8;height:17px;"></div></div>`).join('');
-    const aHtml = items.map((it, n) => {
+    const wordsHtml = ex ? `${h2('Words to know')}<div style="font-size:13px;line-height:1.5;">${ex.words.map((w) => `<div style="margin:5px 0;"><b>${w[0]}</b>, ${w[1]}</div>`).join('')}</div>` : '';
+    const examplesHtml = items.map((it, n) => {
       const steps = (it.steps || []).map((s) => `<div style="margin:7px 0;padding-left:11px;border-left:2px solid #E0A33D;"><div style="font-size:12.5px;color:#C08A2E;font-weight:700;">${s.h}</div><div style="font-size:12.5px;color:#2B2622;line-height:1.45;">${s.p}</div>${s.calc ? `<div style="font-family:Space Mono,monospace;background:#FAF4EA;border:1px solid #EFE7DA;border-radius:6px;padding:6px 8px;margin-top:4px;font-size:11.5px;color:#444;white-space:pre-wrap;">${s.calc}</div>` : ''}</div>`).join('');
-      return `<div style="margin:14px 0;page-break-inside:avoid;"><div style="font-weight:700;font-size:13px;color:#2B2622;">Q${n + 1} — answer</div>${it.answer ? `<div style="background:#2B2622;color:#FBD9A0;border-radius:8px;padding:8px 11px;margin:6px 0;font-size:12.5px;font-weight:600;">${it.answer}</div>` : ''}${steps}</div>`;
+      return `<div style="margin:16px 0;page-break-inside:avoid;"><div style="font-size:13.5px;line-height:1.55;color:#2B2622;"><b>Example ${n + 1}.</b> ${it.q}</div>${it.answer ? `<div style="background:#2B2622;color:#FBD9A0;border-radius:8px;padding:8px 11px;margin:8px 0;font-size:12.5px;font-weight:600;">${it.answer}</div>` : ''}${steps}</div>`;
     }).join('');
     const sheet = `<div style="font-family:'Hanken Grotesk',sans-serif;color:#2B2622;max-width:780px;margin:0 auto;padding:4px;">
         <div style="display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #DD6B4D;padding-bottom:8px;">
-          <div style="font-family:${DISP};font-weight:700;font-size:20px;">Econeasy · Quiz Sheet</div>
+          <div style="font-family:${DISP};font-weight:700;font-size:20px;">Econeasy · Cheat Sheet</div>
           <div style="color:#8A8076;font-size:11.5px;">${meta.eb}</div>
         </div>
         <h1 style="font-family:${DISP};font-weight:700;font-size:26px;margin:14px 0 6px;">${name}</h1>
@@ -1222,10 +1221,8 @@ class Component extends DCLogic {
         ${tipsHtml}
         ${keyHtml ? `${h2('Key idea')}<div style="font-size:13px;line-height:1.55;">${keyHtml}</div>` : ''}
         ${wordsHtml}
-        ${h2('Practice questions')}${qHtml}
-        <div style="page-break-before:always;"></div>
-        ${h2('Answers')}${aHtml}
-        <div style="margin-top:24px;color:#A2937D;font-size:10.5px;text-align:center;">Generated from Econeasy · ${name} — use your browser's "Save as PDF"</div>
+        ${h2('Worked examples (with solutions)')}${examplesHtml}
+        <div style="margin-top:24px;color:#A2937D;font-size:10.5px;text-align:center;">Generated from Econeasy · ${name}. Use your browser's "Save as PDF".</div>
       </div>`;
     const pm = document.getElementById('ee-print'); if (pm) pm.innerHTML = sheet;
     window.print();

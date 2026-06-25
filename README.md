@@ -1,6 +1,6 @@
 # Econeasy
 
-An interactive microeconomics tutor — eleven chapters of animated, draggable graphs
+An interactive microeconomics tutor, eleven chapters of animated, draggable graphs
 with live worked examples and practice questions. Built for the MIT 15.024 sequence.
 
 **Live site:** _enable GitHub Pages (see below) → `https://<your-username>.github.io/econeasy/`_
@@ -14,14 +14,14 @@ Policy & Trade → Tax Incidence · Price Ceilings & Floors · Externalities · 
 
 Every chapter has:
 
-- **▶ Play** — auto-walks the scenarios so you can watch the graph move.
-- **Drag** — grab a curve or point with the mouse and it moves live.
-- **A worked example** — preset scenarios + editable numbers that recompute and drive the graph.
-- **Practice questions** — real problems from the course, with step-by-step solutions you can reveal.
+- **▶ Play**, auto-walks the scenarios so you can watch the graph move.
+- **Drag**, grab a curve or point with the mouse and it moves live.
+- **A worked example**, preset scenarios + editable numbers that recompute and drive the graph.
+- **Practice questions**, real problems from the course, with step-by-step solutions you can reveal.
 
 ## Run it
 
-It's a single self-contained page — no build step.
+It's a single self-contained page, no build step.
 
 ```bash
 # any static server works, e.g.
@@ -33,8 +33,8 @@ Just opening `index.html` from disk also works in most browsers (it loads React 
 
 ## Files
 
-- `index.html` — the whole app (a Claude Design Component; the runtime in `support.js` self-loads React and boots it).
-- `support.js` — the Design Component runtime.
+- `index.html`, the whole app (a Claude Design Component; the runtime in `support.js` self-loads React and boots it).
+- `support.js`, the Design Component runtime.
 
 ## Publish on GitHub Pages
 
